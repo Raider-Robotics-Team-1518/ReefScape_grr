@@ -94,7 +94,7 @@ public final class Constants {
 
     public static final class Tolerances {
 
-        public static final double reefHeightTolerance =1.0; // tolerance for height of the reef levels
+        public static final double reefHeightTolerance = 1.0; // tolerance for height of the reef levels
         public static final double coralEjectAngleTolerance = 0.1; // angle of coral manipulator arm
         public static final double coralIntakeAngleTolerance = 0.1;
         public static final double algaeEjectAngleTolerance = 0.1;

@@ -15,7 +15,7 @@ public class IntakeCoral extends Command {
     private Timer timer;
     private boolean isDone = false;
     private double current_angle = 0;
-    private double targetIntakeAngle = 30;
+    private double targetIntakeAngle = Constants.Reef.targetCoralIntakeAngle;
 
     public IntakeCoral(double targetIntakeAngle) {
         addRequirements(Robot.gamePieceManipulator, Robot.wristSubsystem);
@@ -44,7 +44,9 @@ public class IntakeCoral extends Command {
             // arm is in the correct angle
             Robot.wristSubsystem.setWristSpeed(0d); // turn off arm motor
             Robot.gamePieceManipulator.intakeCoral(); // turn on intake motor
-            if (Robot.gamePieceManipulator.isCoralLoaded() || timer.hasElapsed(Constants.Times.coralIntakeMotorRunTime)) {
+            if (
+                Robot.gamePieceManipulator.isCoralLoaded() || timer.hasElapsed(Constants.Times.coralIntakeMotorRunTime)
+            ) {
                 Robot.gamePieceManipulator.stopCoralMotor();
                 isDone = true;
                 isFinished();

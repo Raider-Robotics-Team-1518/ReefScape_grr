@@ -18,11 +18,17 @@ public class EjectCoral extends Command {
     private Timer timer;
     private boolean isDone = false;
     private double current_angle = Robot.wristSubsystem.getWristPosition();
-    private double targetArmAngle = 30;
+    private double targetArmAngle = Constants.Reef.coralEjectAngleLevel23;
 
-    public EjectCoral(double targetArmAngle) {
+    public EjectCoral(int level) {
         addRequirements(Robot.wristSubsystem, Robot.wristSubsystem);
-        this.targetArmAngle = targetArmAngle; // will be one of the Constants.Reef.armAngle values
+        if (level == 1) {
+            this.targetArmAngle = Constants.Reef.coralEjectAngleLevel1;
+        } else if (level == 2 || level == 3) {
+            this.targetArmAngle = Constants.Reef.coralEjectAngleLevel23;
+        } else {
+            this.targetArmAngle = Constants.Reef.coralEjectAngleLevel4;
+        }
     }
 
     // Called when the command is initially scheduled.

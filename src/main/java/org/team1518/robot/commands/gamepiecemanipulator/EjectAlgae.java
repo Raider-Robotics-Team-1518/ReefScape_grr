@@ -19,7 +19,7 @@ public class EjectAlgae extends Command {
     private Timer timer;
     private boolean isDone = false;
     private double current_angle = Robot.wristSubsystem.getWristPosition();
-    private double targetArmAngle = 30;
+    private double targetArmAngle = Constants.Reef.algaeEjectArmAngle;
 
     public EjectAlgae(double targetArmAngle) {
         // Use addRequirements() here to declare subsystem dependencies.

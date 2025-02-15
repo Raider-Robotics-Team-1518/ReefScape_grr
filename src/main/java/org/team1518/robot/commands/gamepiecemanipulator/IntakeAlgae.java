@@ -14,7 +14,7 @@ public class IntakeAlgae extends Command {
     private Timer timer;
     private boolean isDone = false;
     private double current_angle = Robot.wristSubsystem.getWristPosition();
-    private double targetAlgaeIntakeAngle = 30;
+    private double targetAlgaeIntakeAngle = Constants.Reef.targetAlgaeIntakeAngle;
 
     public IntakeAlgae(double targetAlgaeIntakeAngle) {
         addRequirements(Robot.wristSubsystem, Robot.gamePieceManipulator);
@@ -53,7 +53,7 @@ public class IntakeAlgae extends Command {
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        Robot.gamePieceManipulator.stopAlgaeMotor();;
+        Robot.gamePieceManipulator.stopAlgaeMotor();
     }
 
     // Returns true when the command should end.
