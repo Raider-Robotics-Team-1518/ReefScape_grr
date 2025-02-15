@@ -12,18 +12,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
 
-public class RaiseLift extends Command {
+public class RaiseToCoralIntake extends Command {
 
-    private int level = 0;
     private double currentHeight = 0;
-    private double targetHeight = 0;
+    private double targetHeight = Constants.Reef.coralIntakeHeight;
     private boolean isDone = false;
 
-    public RaiseLift(int level) {
+    public RaiseToCoralIntake() {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.elevatorSubsystem);
-        // level will be one of 1, 2, 3, or 4
-        this.level = level;
     }
 
     // Called when the command is initially scheduled.
@@ -34,7 +31,6 @@ public class RaiseLift extends Command {
     @Override
     public void execute() {
         currentHeight = Robot.elevatorSubsystem.getCurrentHeight();
-        targetHeight = Constants.Reef.levels[this.level];
         if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefHeightTolerance) {
             double v_sign = Math.signum(targetHeight - currentHeight);
             Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));

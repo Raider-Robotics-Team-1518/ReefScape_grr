@@ -20,7 +20,7 @@ public class LowerLift extends Command {
     private boolean isDone = false;
 
     public LowerLift() {
-        addRequirements(Robot.gpm);
+        addRequirements(Robot.elevatorSubsystem);
     }
 
     // Called when the command is initially scheduled.
@@ -30,11 +30,11 @@ public class LowerLift extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        currentHeight = Robot.gpm.getCurrentHeight();
+        currentHeight = Robot.elevatorSubsystem.getCurrentHeight();
         if (currentHeight > targetHeight + Constants.Tolerances.minElevatorHeightTolerance) {
-            Robot.gpm.driveElevator(-Constants.MotorSpeeds.elevatorPower);
+            Robot.elevatorSubsystem.driveElevator(-Constants.MotorSpeeds.elevatorPower);
         } else {
-            Robot.gpm.stopElevator();
+            Robot.elevatorSubsystem.stopElevator();
             isDone = true;
         }
     }
@@ -42,7 +42,7 @@ public class LowerLift extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        Robot.gpm.stopElevator();
+        Robot.elevatorSubsystem.stopElevator();
     }
 
     // Returns true when the command should end.

@@ -16,15 +16,20 @@ import org.team1518.lib.util.Profiler;
 import org.team1518.lib.util.Tunable;
 import org.team1518.robot.commands.Autos;
 import org.team1518.robot.commands.Routines;
+import org.team1518.robot.commands.gamepiecemanipulator.ManualLift;
 import org.team1518.robot.subsystems.Blinkies;
+import org.team1518.robot.subsystems.ElevatorSubsystem;
 import org.team1518.robot.subsystems.GamePieceManipulator;
 import org.team1518.robot.subsystems.Swerve;
+import org.team1518.robot.subsystems.WristSubsystem;
 
 @Logged
 public final class Robot extends TimedRobot {
 
     public final Swerve swerve;
-    public static GamePieceManipulator gpm;
+    public static WristSubsystem wristSubsystem;
+    public static ElevatorSubsystem elevatorSubsystem;
+    public static GamePieceManipulator gamePieceManipulator;
     public static Blinkies m_blinkies;
     public static LimeLight limeLight;
 
@@ -54,7 +59,9 @@ public final class Robot extends TimedRobot {
         routines = new Routines(this);
         autos = new Autos(this);
 
-        gpm = new GamePieceManipulator();
+        elevatorSubsystem = new ElevatorSubsystem();
+        wristSubsystem = new WristSubsystem();
+        gamePieceManipulator = new GamePieceManipulator();
         CameraServer.startAutomaticCapture();
 
         // Initialize controllers
@@ -62,13 +69,7 @@ public final class Robot extends TimedRobot {
         coDriver = new CommandXboxController(Constants.kCoDriver);
 
         // Set default commands
-        swerve.setDefaultCommand(
-            swerve.drive(
-                driver::getLeftX,
-                driver::getLeftY,
-                () -> driver.getLeftTriggerAxis() - driver.getRightTriggerAxis()
-            )
-        );
+        swerve.setDefaultCommand(swerve.drive(driver::getLeftX, driver::getLeftY, () -> 0));
 
         // Create triggers
         RobotModeTriggers.autonomous().whileTrue(GRRDashboard.runSelectedAuto());
@@ -78,6 +79,8 @@ public final class Robot extends TimedRobot {
 
         // Co-driver bindings
         coDriver.a().onTrue(none());
+        coDriver.y().whileTrue(new ManualLift(0.45));
+        coDriver.b().whileTrue(new ManualLift(-0.25));
     }
 
     @Override

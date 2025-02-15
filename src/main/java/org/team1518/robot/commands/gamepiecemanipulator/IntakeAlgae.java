@@ -13,11 +13,11 @@ public class IntakeAlgae extends Command {
 
     private Timer timer;
     private boolean isDone = false;
-    private double current_angle = Robot.gpm.getWristPosition();
+    private double current_angle = Robot.wristSubsystem.getWristPosition();
     private double targetAlgaeIntakeAngle = 30;
 
     public IntakeAlgae(double targetAlgaeIntakeAngle) {
-        addRequirements(Robot.gpm);
+        addRequirements(Robot.wristSubsystem, Robot.gamePieceManipulator);
         this.targetAlgaeIntakeAngle = targetAlgaeIntakeAngle;
     }
 
@@ -31,17 +31,17 @@ public class IntakeAlgae extends Command {
     @Override
     public void execute() {
         timer.start();
-        current_angle = Robot.gpm.getWristPosition();
+        current_angle = Robot.wristSubsystem.getWristPosition();
         // Calculate power curve proportional
         double armRotationPower = Math.abs(this.targetAlgaeIntakeAngle - current_angle) / 100;
         // Move arm up or down to target arm angle
         if (Math.abs(this.targetAlgaeIntakeAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance) {
             double v_sign = Math.signum(this.targetAlgaeIntakeAngle - current_angle);
-            Robot.gpm.setWristSpeed(v_sign * (armRotationPower));
+            Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
         } else {
             // the arm's at the correct angle, stop arm, intake the algae
-            Robot.gpm.setWristSpeed(0d);
-            Robot.gpm.setCoralMotorSpeed(Constants.MotorSpeeds.algaeIntakeMotorSpeed);
+            Robot.wristSubsystem.setWristSpeed(0d);
+            Robot.gamePieceManipulator.intakeAlgae();
             if (timer.hasElapsed(Constants.Times.algaeMotorRunTime)) {
                 isDone = true;
                 isFinished();
@@ -53,7 +53,7 @@ public class IntakeAlgae extends Command {
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        Robot.gpm.setCoralMotorSpeed(0);
+        Robot.gamePieceManipulator.stopAlgaeMotor();;
     }
 
     // Returns true when the command should end.

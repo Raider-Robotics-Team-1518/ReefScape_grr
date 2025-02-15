@@ -18,7 +18,7 @@ public class IntakeCoral extends Command {
     private double targetIntakeAngle = 30;
 
     public IntakeCoral(double targetIntakeAngle) {
-        // addRequirements(Robot.gpm);
+        addRequirements(Robot.gamePieceManipulator, Robot.wristSubsystem);
         this.targetIntakeAngle = targetIntakeAngle;
     }
 
@@ -33,19 +33,19 @@ public class IntakeCoral extends Command {
     public void execute() {
         timer.start();
         // set arm to correct angle
-        current_angle = Robot.gpm.getWristPosition();
+        current_angle = Robot.wristSubsystem.getWristPosition();
         // Calculate power curve proportional
         double armRotationPower = Math.abs(this.targetIntakeAngle - current_angle) / 100;
         // Move arm up or down to target arm angle
         if (Math.abs(this.targetIntakeAngle - current_angle) > Constants.Tolerances.coralIntakeAngleTolerance) {
             double v_sign = Math.signum(this.targetIntakeAngle - current_angle);
-            Robot.gpm.setWristSpeed(v_sign * (armRotationPower));
+            Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
         } else {
             // arm is in the correct angle
-            Robot.gpm.setWristSpeed(0d); // turn off arm motor
-            Robot.gpm.setCoralMotorSpeed(Constants.MotorSpeeds.coralIntakeMotorSpeed); // turn on intake motor
-            if (Robot.gpm.isCoralLoaded() || timer.hasElapsed(Constants.Times.coralIntakeMotorRunTime)) {
-                Robot.gpm.setCoralMotorSpeed(0d);
+            Robot.wristSubsystem.setWristSpeed(0d); // turn off arm motor
+            Robot.gamePieceManipulator.intakeCoral(); // turn on intake motor
+            if (Robot.gamePieceManipulator.isCoralLoaded() || timer.hasElapsed(Constants.Times.coralIntakeMotorRunTime)) {
+                Robot.gamePieceManipulator.stopCoralMotor();
                 isDone = true;
                 isFinished();
             }
@@ -56,7 +56,7 @@ public class IntakeCoral extends Command {
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        Robot.gpm.setCoralMotorSpeed(0);
+        Robot.gamePieceManipulator.stopCoralMotor();
     }
 
     // Returns true when the command should end.

@@ -17,11 +17,11 @@ public class EjectCoral extends Command {
 
     private Timer timer;
     private boolean isDone = false;
-    private double current_angle = Robot.gpm.getWristPosition();
+    private double current_angle = Robot.wristSubsystem.getWristPosition();
     private double targetArmAngle = 30;
 
     public EjectCoral(double targetArmAngle) {
-        addRequirements(Robot.gpm);
+        addRequirements(Robot.wristSubsystem, Robot.wristSubsystem);
         this.targetArmAngle = targetArmAngle; // will be one of the Constants.Reef.armAngle values
     }
 
@@ -36,16 +36,16 @@ public class EjectCoral extends Command {
     public void execute() {
         timer.start();
         // set arm to correct angle
-        current_angle = Robot.gpm.getWristPosition();
+        current_angle = Robot.wristSubsystem.getWristPosition();
         // Calculate power curve proportional
         double armRotationPower = Math.abs(this.targetArmAngle - current_angle) / 100;
         // Move arm up or down to target arm angle
         if (Math.abs(this.targetArmAngle - current_angle) > Constants.Tolerances.coralEjectAngleTolerance) {
             double v_sign = Math.signum(this.targetArmAngle - current_angle);
-            Robot.gpm.setWristSpeed(v_sign * (armRotationPower));
+            Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
         } else {
-            Robot.gpm.setWristSpeed(0d);
-            Robot.gpm.setCoralMotorSpeed(Constants.MotorSpeeds.coralEjectMotorSpeed);
+            Robot.wristSubsystem.setWristSpeed(0d);
+            Robot.gamePieceManipulator.ejectCoral();
             if (timer.hasElapsed(Constants.Times.coralEjectMotorRunTime)) {
                 isDone = true;
                 isFinished();
@@ -57,7 +57,7 @@ public class EjectCoral extends Command {
     @Override
     public void end(boolean interrupted) {
         timer.stop();
-        Robot.gpm.setCoralMotorSpeed(0);
+        Robot.gamePieceManipulator.stopCoralMotor();
     }
 
     // Returns true when the command should end.

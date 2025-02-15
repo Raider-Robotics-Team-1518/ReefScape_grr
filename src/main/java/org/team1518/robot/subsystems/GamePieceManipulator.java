@@ -4,104 +4,87 @@
 
 package org.team1518.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.ColorSensorV3;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1518.robot.Constants;
-import org.team1518.robot.Utils;
 
 public class GamePieceManipulator extends SubsystemBase {
 
-    private final I2C.Port i2cPort = I2C.Port.kMXP;
-    private final ColorSensorV3 m_colorSensor = new ColorSensorV3(i2cPort);
-    // probably not going to all be TalonFXs
-    private SparkMax elevatorMotor;
-    private SparkMax wristMotor;
-    private SparkMax coralMotor;
-    private double elevatorPosition = 0;
-    private double coralArmPosition = 0;
+    private final I2C.Port mxpI2cPort = I2C.Port.kMXP;
+    private final I2C.Port builtInI2cPort = I2C.Port.kOnboard;
+    private final ColorSensorV3 m_coralColorSensor = new ColorSensorV3(mxpI2cPort);
+    private final ColorSensorV3 m_algaeColorSensor = new ColorSensorV3(builtInI2cPort);
+    private TalonFX gamePieceMotor;
 
     public GamePieceManipulator() {
-        elevatorMotor = new SparkMax(Constants.Motors.elevatorMotorId, MotorType.kBrushless);
-        wristMotor = new SparkMax(Constants.Motors.wristMotorId, MotorType.kBrushless);
-        coralMotor = new SparkMax(Constants.Motors.coralMotorId, MotorType.kBrushless);
-        // TODO: reset the encoders to 0 here
-    }
-
-    public void driveElevator(double speed) {
-        // TODO: this is probably not correct even if we do use a TalonFX
-        elevatorPosition = getCurrentHeight();
-        if (elevatorPosition > Constants.Limits.elevatorMin && elevatorPosition < Constants.Limits.elevatorMax) {
-            elevatorMotor.set(speed);
-        } else {
-            elevatorMotor.set(0.0);
-        }
-    }
-
-    public void stopElevator() {
-        elevatorMotor.set(0d);
+        gamePieceMotor = new TalonFX(Constants.Motors.gamePieceMotorId);
     }
 
     public boolean isCoralLoaded() {
         // read the color/presence sensor to see if the coral has been loaded
-        Color detectedColor = m_colorSensor.getColor(); // returns a struct of doubles
-        double r = detectedColor.red;
-        double b = detectedColor.blue;
-        double g = detectedColor.green;
+        boolean coralIsLoaded = m_coralColorSensor.getProximity() > 1024;
+        SmartDashboard.putBoolean("Coral Is Loaded", coralIsLoaded);
+        return coralIsLoaded;
+    }
 
-        // calculate with Hue Saturation Value (HSV), may need
-        // to consider the saturation in addition to value
-        float value = Utils.getValue((float) r, (float) g, (float) b);
+    public boolean isAlgaeLoaded() {
+        // read the color/presence sensor to see if the coral has been loaded
+        boolean algaeIsLoaded = m_algaeColorSensor.getProximity() > 1024;
+        SmartDashboard.putBoolean("Algae Is Loaded", algaeIsLoaded);
+        return algaeIsLoaded;
+    }
 
-        if (value > Constants.ColorValues.whiteValueMin) {
-            SmartDashboard.putBoolean("Coral Loaded", true);
-            return true;
+    public void intakeCoral() {
+        if (!isCoralLoaded()) {
+            gamePieceMotor.set(Constants.MotorSpeeds.coralIntakeMotorSpeed);
         } else {
-            SmartDashboard.putBoolean("Coral Loaded", false);
-            return false;
+            stopGamePieceMotor();
         }
     }
 
-    public void setCoralMotorSpeed(double speed) {
-        // positive for ejecting, negative for intaking
-        coralMotor.set(speed);
-    }
-
-    public void setWristSpeed(double speed) {
-        // positive for rotating towards a more vertical angle
-        double currentWristPosition = getWristPosition();
-        if (
-            currentWristPosition > Constants.Limits.wristMinAngle &&
-            currentWristPosition < Constants.Limits.wristMaxAngle
-        ) {
-            wristMotor.set(speed);
+    public void ejectCoral() {
+        if (isCoralLoaded()) {
+            gamePieceMotor.set(Constants.MotorSpeeds.coralEjectMotorSpeed);
         } else {
-            wristMotor.set(0);
+            stopGamePieceMotor();
         }
     }
 
-    public double getCurrentHeight() {
-        // get current height of the elevator
-        // TODO: this is probably not correct even if we do use a TalonFX
-
-        elevatorPosition = elevatorMotor.getAbsoluteEncoder().getPosition(); // this is in rotations
-        return elevatorPosition * Constants.Factors.elevatorInchesPerRevolution;
+    public void intakeAlgae() {
+        if (!isAlgaeLoaded()) {
+            gamePieceMotor.set(Constants.MotorSpeeds.algaeIntakeMotorSpeed);
+        } else {
+            stopAlgaeMotor();
+        }
     }
 
-    public double getWristPosition() {
-        // get the angle of the coral arm/wrist/whatever we're going to call it
-        // TODO: this is probably not correct even if we do use a TalonFX
-        coralArmPosition = wristMotor.getAbsoluteEncoder().getPosition(); // rotations
-        // return coralArmPosition * Constants.Factors.wristDegreesPerRevolution; // degrees, but should it be radians?
-        return 5;
+    public void ejectAlgae() {
+        if (isAlgaeLoaded()) {
+            gamePieceMotor.set(Constants.MotorSpeeds.algaeEjectMotorSpeed);
+        } else {
+            stopAlgaeMotor();
+        }
+    }
+
+    public void stopCoralMotor() {
+        stopGamePieceMotor();
+    }
+
+    public void stopAlgaeMotor() {
+        stopGamePieceMotor();
+    }
+
+    public void stopGamePieceMotor() {
+        gamePieceMotor.set(0);
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        SmartDashboard.putBoolean("Is Coral Loaded", isCoralLoaded());
+        SmartDashboard.putBoolean("Is Algae Loaded", isAlgaeLoaded());
     }
 }

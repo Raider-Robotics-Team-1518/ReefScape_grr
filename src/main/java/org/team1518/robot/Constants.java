@@ -50,14 +50,14 @@ public final class Constants {
 
     public static class Motors {
 
-        public static final int elevatorMotorId = 16;
+        public static final int elevatorMotorId = 26;
         public static final int wristMotorId = 17;
-        public static final int coralMotorId = 18;
+        public static final int gamePieceMotorId = 18;
     }
 
     public static class Limits {
 
-        public static final double elevatorMax = 100;
+        public static final double elevatorMax = 9500;
         public static final double elevatorMin = 0;
         public static final double wristMinAngle = 0;
         public static final double wristMaxAngle = 180;
@@ -81,6 +81,7 @@ public final class Constants {
             47.625, // level 3
             72 // level 4
         };
+        public static final double coralIntakeHeight = 16;
         // optimal angle in degrees to eject coral onto level 1
         public static final double coralEjectAngleLevel1 = 10; // nearly horizontal
         public static final double coralEjectAngleLevel23 = 30;
@@ -93,12 +94,12 @@ public final class Constants {
 
     public static final class Tolerances {
 
-        public static final double reefHeightTolerance = 1.0; // tolerance for height of the reef levels
+        public static final double reefHeightTolerance =1.0; // tolerance for height of the reef levels
         public static final double coralEjectAngleTolerance = 0.1; // angle of coral manipulator arm
         public static final double coralIntakeAngleTolerance = 0.1;
         public static final double algaeEjectAngleTolerance = 0.1;
         public static final double algaeIntakeAngleTolerance = 0.1;
-        public static final double minElevatorHeightTolerance = 0.1;
+        public static final double minElevatorHeightTolerance = 1.0;
     }
 
     public static final class MotorSpeeds {
