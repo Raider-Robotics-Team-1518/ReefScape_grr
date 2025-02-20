@@ -5,6 +5,7 @@
 package org.team1518.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1518.robot.Constants;
@@ -15,7 +16,10 @@ public class WristSubsystem extends SubsystemBase {
     private double coralArmPosition = 0;
 
     public WristSubsystem() {
-        wristMotor = new TalonFX(Constants.Motors.gamePieceMotorId);
+        wristMotor = new TalonFX(Constants.Motors.wristMotorId);
+        wristMotor.setInverted(true);
+        wristMotor.setNeutralMode(NeutralModeValue.Brake);
+        wristMotor.setPosition(0);
     }
 
     public void setWristSpeed(double speed) {
@@ -38,7 +42,7 @@ public class WristSubsystem extends SubsystemBase {
     public double getWristPosition() {
         // get the angle of the coral arm/wrist/whatever we're going to call it
         coralArmPosition = wristMotor.getPosition().getValueAsDouble(); // rotations
-        coralArmPosition /= 100; // divide by gearbox ratio
+        //coralArmPosition /= 100; // divide by gearbox ratio
         return coralArmPosition * Constants.Factors.wristDegreesPerRevolution; // degrees, but should it be radians?
     }
 

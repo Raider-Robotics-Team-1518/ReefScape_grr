@@ -26,9 +26,9 @@ public final class Constants {
         public static final int kFlTurn = 4;
         public static final int kFrMove = 9;
         public static final int kFrTurn = 2;
-        public static final int kBlMove = 5;
+        public static final int kBlMove = 7;
         public static final int kBlTurn = 6;
-        public static final int kBrMove = 7;
+        public static final int kBrMove = 5;
         public static final int kBrTurn = 8;
 
         public static final int kFlEncoder = 12;
@@ -51,8 +51,8 @@ public final class Constants {
     public static class Motors {
 
         public static final int elevatorMotorId = 26;
-        public static final int wristMotorId = 17;
-        public static final int gamePieceMotorId = 18;
+        public static final int wristMotorId = 18;
+        public static final int gamePieceMotorId = 17;
     }
 
     public static class Limits {
@@ -66,7 +66,7 @@ public final class Constants {
     public static class Factors {
 
         public static final double elevatorInchesPerRevolution = 1;
-        public static final double wristDegreesPerRevolution = 360;
+        public static final double wristDegreesPerRevolution = 3.6;
     }
 
     public static class Reef {

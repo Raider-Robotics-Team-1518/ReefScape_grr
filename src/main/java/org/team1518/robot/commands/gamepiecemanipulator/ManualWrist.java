@@ -2,23 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-/*
- * Class to handle raising the lift to a specified level of the reef
- */
-
 package org.team1518.robot.commands.gamepiecemanipulator;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import org.team1518.robot.Robot;
 
-public class ManualLift extends Command {
+/* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
+public class ManualWrist extends Command {
 
     private double speed = 0;
     private boolean isDone = false;
 
-    public ManualLift(double speed) {
-        // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(Robot.elevatorSubsystem);
+    public ManualWrist(double speed) {
+        addRequirements(Robot.wristSubsystem);
         this.speed = speed;
     }
 
@@ -30,18 +26,16 @@ public class ManualLift extends Command {
     @Override
     public void execute() {
         if (Math.abs(speed) > 0) {
-            Robot.elevatorSubsystem.driveElevator(speed);
+            Robot.wristSubsystem.setWristSpeed(speed);
         } else {
-            Robot.elevatorSubsystem.stopElevator();
+            Robot.wristSubsystem.stopWrist();
             isDone = true;
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {
-        Robot.elevatorSubsystem.stopElevator();
-    }
+    public void end(boolean interrupted) {}
 
     // Returns true when the command should end.
     @Override

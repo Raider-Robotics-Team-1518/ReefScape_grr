@@ -17,6 +17,7 @@ import org.team1518.lib.util.Tunable;
 import org.team1518.robot.commands.Autos;
 import org.team1518.robot.commands.Routines;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualLift;
+import org.team1518.robot.commands.gamepiecemanipulator.ManualWrist;
 import org.team1518.robot.subsystems.Blinkies;
 import org.team1518.robot.subsystems.ElevatorSubsystem;
 import org.team1518.robot.subsystems.GamePieceManipulator;
@@ -78,9 +79,10 @@ public final class Robot extends TimedRobot {
         driver.povLeft().onTrue(swerve.tareRotation());
 
         // Co-driver bindings
-        coDriver.a().onTrue(none());
-        coDriver.y().whileTrue(new ManualLift(0.45));
-        coDriver.b().whileTrue(new ManualLift(-0.25));
+        coDriver.x().whileTrue(new ManualWrist(0.25)).onFalse(new ManualWrist(0));
+        coDriver.a().whileTrue(new ManualWrist(-0.25)).onFalse(new ManualWrist(0));
+        coDriver.y().whileTrue(new ManualLift(1.0));
+        coDriver.b().whileTrue(new ManualLift(-0.80));
     }
 
     @Override
