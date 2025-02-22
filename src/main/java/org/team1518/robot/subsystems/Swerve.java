@@ -31,30 +31,33 @@ import org.team1518.robot.Constants.RobotMap;
 @Logged
 public final class Swerve extends GRRSubsystem {
 
+    // Swerve Module Locations are based on the center of the robot.
+    // +X is forward of center and +Y is left of center.
+    // NavX IMU orientation is the USB port is directionally forward
     private static final SwerveModuleConfig kFrontLeft = new SwerveModuleConfig()
         .setName("frontLeft")
-        .setLocation(0.15, 0.235)
+        .setLocation(0.3937, 0.3175)
         .setMoveMotor(SwerveMotors.talonFX(RobotMap.kFlMove, false))
         .setTurnMotor(SwerveMotors.talonFX(RobotMap.kFlTurn, true))
         .setEncoder(SwerveEncoders.canCoder(RobotMap.kFlEncoder, 0.260010, false));
 
     private static final SwerveModuleConfig kFrontRight = new SwerveModuleConfig()
         .setName("frontRight")
-        .setLocation(0.15, -0.248)
+        .setLocation(0.3937, -0.3048)
         .setMoveMotor(SwerveMotors.talonFX(RobotMap.kFrMove, false))
         .setTurnMotor(SwerveMotors.talonFX(RobotMap.kFrTurn, true))
         .setEncoder(SwerveEncoders.canCoder(RobotMap.kFrEncoder, 0.129395, false));
 
     private static final SwerveModuleConfig kBackLeft = new SwerveModuleConfig()
         .setName("backLeft")
-        .setLocation(-0.578, 0.235)
+        .setLocation(-0.4699, 0.3175)
         .setMoveMotor(SwerveMotors.talonFX(RobotMap.kBlMove, false))
         .setTurnMotor(SwerveMotors.talonFX(RobotMap.kBlTurn, true))
         .setEncoder(SwerveEncoders.canCoder(RobotMap.kBlEncoder, 0.427002, false));
 
     private static final SwerveModuleConfig kBackRight = new SwerveModuleConfig()
         .setName("backRight")
-        .setLocation(-0.578, -0.248)
+        .setLocation(-0.4699, -0.3048)
         .setMoveMotor(SwerveMotors.talonFX(RobotMap.kBrMove, false))
         .setTurnMotor(SwerveMotors.talonFX(RobotMap.kBrTurn, true))
         .setEncoder(SwerveEncoders.canCoder(RobotMap.kBrEncoder, 0.220703, false));

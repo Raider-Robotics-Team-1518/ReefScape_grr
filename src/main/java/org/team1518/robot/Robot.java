@@ -7,8 +7,10 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import org.team1518.lib.util.GRRDashboard;
@@ -16,6 +18,8 @@ import org.team1518.lib.util.Profiler;
 import org.team1518.lib.util.Tunable;
 import org.team1518.robot.commands.Autos;
 import org.team1518.robot.commands.Routines;
+import org.team1518.robot.commands.gamepiecemanipulator.IntakeCoral;
+import org.team1518.robot.commands.gamepiecemanipulator.ManualIntake;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualLift;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualWrist;
 import org.team1518.robot.subsystems.Blinkies;
@@ -37,8 +41,9 @@ public final class Robot extends TimedRobot {
     public final Routines routines;
     public final Autos autos;
 
-    private final CommandXboxController driver;
+    private final Joystick driver;
     private final CommandXboxController coDriver;
+    private final CommandGenericHID buttonBox;
 
     public Robot() {
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -66,23 +71,26 @@ public final class Robot extends TimedRobot {
         CameraServer.startAutomaticCapture();
 
         // Initialize controllers
-        driver = new CommandXboxController(Constants.kDriver);
+        driver = new Joystick(Constants.kDriver);
         coDriver = new CommandXboxController(Constants.kCoDriver);
+        buttonBox = new CommandGenericHID(Constants.kButtonBox);
 
         // Set default commands
-        swerve.setDefaultCommand(swerve.drive(driver::getLeftX, driver::getLeftY, () -> 0));
+        swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> driver.getZ()));
 
         // Create triggers
         RobotModeTriggers.autonomous().whileTrue(GRRDashboard.runSelectedAuto());
 
         // Driver bindings
-        driver.povLeft().onTrue(swerve.tareRotation());
+        //driver.povLeft().onTrue(swerve.tareRotation());
 
         // Co-driver bindings
-        coDriver.x().whileTrue(new ManualWrist(0.25)).onFalse(new ManualWrist(0));
-        coDriver.a().whileTrue(new ManualWrist(-0.25)).onFalse(new ManualWrist(0));
+        coDriver.x().whileTrue(new ManualWrist(0.25)); //.onFalse(new ManualWrist(0));
+        coDriver.a().whileTrue(new ManualWrist(-0.25)); //.onFalse(new ManualWrist(0));
         coDriver.y().whileTrue(new ManualLift(1.0));
         coDriver.b().whileTrue(new ManualLift(-0.80));
+        coDriver.rightTrigger().whileTrue(new ManualIntake(0.25)); //.onFalse(new ManualIntake(0));
+        buttonBox.button(10).onTrue(new IntakeCoral());
     }
 
     @Override

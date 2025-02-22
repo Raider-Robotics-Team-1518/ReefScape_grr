@@ -8,13 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import org.team1518.robot.Robot;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ManualWrist extends Command {
+public class ManualIntake extends Command {
 
+    /** Creates a new ManualIntake. */
     private double speed = 0;
     private boolean isDone = false;
 
-    public ManualWrist(double speed) {
-        addRequirements(Robot.wristSubsystem);
+    public ManualIntake(double speed) {
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(Robot.gamePieceManipulator);
         this.speed = speed;
     }
 
@@ -26,9 +28,9 @@ public class ManualWrist extends Command {
     @Override
     public void execute() {
         if (Math.abs(speed) > 0) {
-            Robot.wristSubsystem.setWristSpeed(speed);
+            Robot.gamePieceManipulator.runIntake(speed);
         } else {
-            Robot.wristSubsystem.stopWrist();
+            Robot.gamePieceManipulator.stopGamePieceMotor();
             isDone = true;
         }
     }
@@ -36,7 +38,7 @@ public class ManualWrist extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        Robot.wristSubsystem.stopWrist();
+        Robot.gamePieceManipulator.stopGamePieceMotor();
     }
 
     // Returns true when the command should end.

@@ -44,7 +44,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public double getCurrentHeight() {
         // get current height of the elevator
         elevatorPosition = -elevatorEncoder.get(); //elevatorMotor.getPosition().getValueAsDouble(); // this is in rotations
-        return elevatorPosition * Constants.Factors.elevatorInchesPerRevolution;
+        return elevatorPosition / Constants.Factors.elevatorInchesPerRevolution;
     }
 
     @Override

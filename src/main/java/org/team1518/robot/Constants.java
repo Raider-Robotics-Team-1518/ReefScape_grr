@@ -13,6 +13,7 @@ public final class Constants {
 
     public static final int kDriver = 0;
     public static final int kCoDriver = 1;
+    public static final int kButtonBox = 2;
 
     /**
      * The RobotMap class defines CAN IDs, CAN bus names, DIO/PWM/PH/PCM channel
@@ -57,16 +58,16 @@ public final class Constants {
 
     public static class Limits {
 
-        public static final double elevatorMax = 9500;
-        public static final double elevatorMin = 0;
-        public static final double wristMinAngle = 0;
-        public static final double wristMaxAngle = 180;
+        public static final double elevatorMax = 52.625; // encoder count 9500;
+        public static final double elevatorMin = 0.25; // encoder count 0;
+        public static final double wristMinAngle = -180;
+        public static final double wristMaxAngle = 0;
     }
 
     public static class Factors {
 
-        public static final double elevatorInchesPerRevolution = 1;
-        public static final double wristDegreesPerRevolution = 3.6;
+        public static final double elevatorInchesPerRevolution = 182.04; // Encoder Count 9530 / Total Height Change 52.625
+        public static final double wristDegreesPerRevolution = 3.6; // 100:1 ratio gives 360 / 100
     }
 
     public static class Reef {
@@ -88,7 +89,7 @@ public final class Constants {
         public static final double coralEjectAngleLevel4 = 90; // vertical
         // optimal angle in degrees for ejecting algae into the processor
         public static final double algaeEjectArmAngle = 20;
-        public static final double targetCoralIntakeAngle = 70;
+        public static final double targetCoralIntakeAngle = -91;
         public static final double targetAlgaeIntakeAngle = 20;
     }
 
@@ -105,9 +106,10 @@ public final class Constants {
     public static final class MotorSpeeds {
 
         public static final double elevatorPower = 0.25;
+        public static final double wristPower = 0.25;
         // TODO: either intake or eject need to have negative values
-        public static final double coralEjectMotorSpeed = 0.5;
-        public static final double coralIntakeMotorSpeed = 0.25;
+        public static final double coralEjectMotorSpeed = 0.2;
+        public static final double coralIntakeMotorSpeed = 0.2;
         public static final double algaeEjectMotorSpeed = 0.5;
         public static final double algaeIntakeMotorSpeed = 0.5;
     }
@@ -115,7 +117,7 @@ public final class Constants {
     public static final class Times {
 
         public static final double coralEjectMotorRunTime = 2.5;
-        public static final double coralIntakeMotorRunTime = 10;
+        public static final double coralIntakeMotorRunTime = 2.5;
         public static final double algaeMotorRunTime = 2.5;
     }
 
@@ -127,5 +129,11 @@ public final class Constants {
         // see https://hslpicker.com/#ff6a00
         public static final float whiteHueMin = 30.0f;
         public static final float whiteHueMax = 80.0f;
+    }
+
+    public static final class VisionValues {
+
+        // minimum distance inches to april tags before losing sight
+        public static final double minDistanceFOV = 25.0;
     }
 }

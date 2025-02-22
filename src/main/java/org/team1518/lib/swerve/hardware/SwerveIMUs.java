@@ -154,6 +154,7 @@ public final class SwerveIMUs {
      * Configures a {@link NavX}.
      * @param port The port to which the NavX is connected, e.g. AHRS.NavXComType.kUSB1
      */
+    // NavX IMU orientation is the USB port is directionally forward
     public static SwerveIMU.Ctor navx(AHRS.NavXComType port) {
         return config -> {
             var deviceLogger = new NavXLogger();
