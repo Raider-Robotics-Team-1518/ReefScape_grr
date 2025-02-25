@@ -77,20 +77,22 @@ public final class Constants {
         // accommodate variances in manufacturing and assembly."
         public static final double[] levels = {
             0, // we ignore this level, leave at 0
-            18, // height in inches of level 1 of the reef
-            31.875, // level 2
-            47.625, // level 3
-            72 // level 4
+            0, // height in inches of level 1 of the reef
+            5, // level 2
+            15.5, // level 3
+            36 // level 4
         };
-        public static final double coralIntakeHeight = 16;
+        // elevator to intake height
+        public static final double targetCoralIntakeHeight = 5.9;
         // optimal angle in degrees to eject coral onto level 1
-        public static final double coralEjectAngleLevel1 = 10; // nearly horizontal
-        public static final double coralEjectAngleLevel23 = 30;
-        public static final double coralEjectAngleLevel4 = 90; // vertical
+        public static final double coralEjectAngleLevel1 = 0; // nearly horizontal
+        public static final double coralEjectAngleLevel23 = 0;
+        public static final double coralEjectAngleLevel4 = -46; // vertical
         // optimal angle in degrees for ejecting algae into the processor
-        public static final double algaeEjectArmAngle = 20;
-        public static final double targetCoralIntakeAngle = -91;
-        public static final double targetAlgaeIntakeAngle = 20;
+        public static final double algaeEjectArmAngle = -20;
+        public static final double targetCoralIntakeAngle = -95;
+        public static final double targetAlgaeIntakeAngle = -20;
+        public static final double travelAngle = -39;
     }
 
     public static final class Tolerances {
@@ -105,7 +107,8 @@ public final class Constants {
 
     public static final class MotorSpeeds {
 
-        public static final double elevatorPower = 0.25;
+        public static final double elevatorPower = 0.9;
+        public static final double elevatorPowerDn = -0.75;
         public static final double wristPower = 0.25;
         // TODO: either intake or eject need to have negative values
         public static final double coralEjectMotorSpeed = 0.2;

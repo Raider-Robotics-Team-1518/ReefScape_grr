@@ -168,7 +168,7 @@ public final class SwerveIMUs {
 
                 @Override
                 public Rotation2d getYaw() {
-                    return Rotation2d.fromDegrees(navx.getYaw());
+                    return Rotation2d.fromDegrees(-navx.getYaw());
                 }
 
                 @Override

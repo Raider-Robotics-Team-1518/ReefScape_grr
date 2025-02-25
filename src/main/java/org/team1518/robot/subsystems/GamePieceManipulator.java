@@ -48,11 +48,11 @@ public class GamePieceManipulator extends SubsystemBase {
     }
 
     public void ejectCoral() {
-        if (isCoralLoaded()) {
-            gamePieceMotor.set(Constants.MotorSpeeds.coralEjectMotorSpeed);
-        } else {
-            stopGamePieceMotor();
-        }
+        // if (isCoralLoaded()) {
+        gamePieceMotor.set(Constants.MotorSpeeds.coralEjectMotorSpeed);
+        // } else {
+        //     stopGamePieceMotor();
+        // }
     }
 
     public void intakeAlgae() {

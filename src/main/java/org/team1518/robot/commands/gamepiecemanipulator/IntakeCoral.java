@@ -15,11 +15,14 @@ public class IntakeCoral extends Command {
     private boolean isDone = false;
     private boolean isAtAngle = false;
     private boolean isCoralLoaded = false;
+    private boolean isAtHeight = false;
     private double current_angle = 0;
     private double targetIntakeAngle = Constants.Reef.targetCoralIntakeAngle;
+    private double current_height = 0;
+    private double targetIntakeHeight = Constants.Reef.targetCoralIntakeHeight;
 
     public IntakeCoral() {
-        addRequirements(Robot.gamePieceManipulator, Robot.wristSubsystem);
+        addRequirements(Robot.gamePieceManipulator, Robot.wristSubsystem, Robot.elevatorSubsystem);
     }
 
     // Called when the command is initially scheduled.
@@ -28,13 +31,13 @@ public class IntakeCoral extends Command {
         isDone = false;
         isAtAngle = false;
         isCoralLoaded = false;
-        //timer = new Timer();
+        isAtHeight = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (isAtAngle && isCoralLoaded) {
+        if (isAtAngle && isCoralLoaded && isAtHeight) {
             isDone = true;
         } else {
             // set arm to correct angle
@@ -47,6 +50,16 @@ public class IntakeCoral extends Command {
                 Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
             } else {
                 isAtAngle = true;
+            }
+            // set height to correct
+            current_height = Robot.elevatorSubsystem.getCurrentHeight();
+            // Move elevator up or down to target height
+            if (Math.abs(targetIntakeHeight - current_height) > Constants.Tolerances.reefHeightTolerance) {
+                double v_sign = Math.signum(targetIntakeHeight - current_height);
+                Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
+            } else {
+                Robot.elevatorSubsystem.stopElevator();
+                isAtHeight = true;
             }
             if (!Robot.gamePieceManipulator.isCoralLoaded()) {
                 Robot.gamePieceManipulator.intakeCoral();
@@ -63,6 +76,7 @@ public class IntakeCoral extends Command {
         //timer.stop();
         Robot.wristSubsystem.stopWrist();
         Robot.gamePieceManipulator.stopCoralMotor();
+        Robot.elevatorSubsystem.stopElevator();
         isDone = true;
     }
 

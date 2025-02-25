@@ -19,9 +19,10 @@ public class EjectCoral extends Command {
     private boolean isDone = false;
     private double current_angle = Robot.wristSubsystem.getWristPosition();
     private double targetArmAngle = Constants.Reef.coralEjectAngleLevel23;
+    private double targetHeight = 0;
 
     public EjectCoral(int level) {
-        addRequirements(Robot.wristSubsystem, Robot.wristSubsystem);
+        addRequirements(Robot.wristSubsystem, Robot.wristSubsystem, Robot.elevatorSubsystem);
         if (level == 1) {
             this.targetArmAngle = Constants.Reef.coralEjectAngleLevel1;
         } else if (level == 2 || level == 3) {

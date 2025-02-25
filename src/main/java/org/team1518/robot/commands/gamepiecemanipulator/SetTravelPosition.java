@@ -14,6 +14,8 @@ public class SetTravelPosition extends Command {
     private boolean isDone = false;
     private boolean isAtHeight = false;
     private boolean isAtAngle = false;
+    private double current_angle = 0;
+    private double current_height = 0;
 
     /** Creates a new SetTravelPosition. */
     public SetTravelPosition() {
@@ -31,24 +33,30 @@ public class SetTravelPosition extends Command {
         if (isAtHeight && isAtAngle) {
             isDone = true;
         } else {
-            //Move the elevator to 2.5"
-            if (Robot.elevatorSubsystem.getCurrentHeight() < Constants.Reef.coralIntakeHeight) {
-                Robot.elevatorSubsystem.driveElevator(Constants.MotorSpeeds.elevatorPower); //move the carriage up
-            } else if (Robot.elevatorSubsystem.getCurrentHeight() > Constants.Reef.coralIntakeHeight) {
-                Robot.elevatorSubsystem.driveElevator(-Constants.MotorSpeeds.elevatorPower); //move the carriage down
-            } else {
-                Robot.elevatorSubsystem.stopElevator();
-                isAtHeight = true;
-            }
-
-            //Move the wrist to the intake position
-            if (Robot.wristSubsystem.getWristPosition() < Constants.Reef.targetCoralIntakeAngle) {
-                Robot.wristSubsystem.setWristSpeed(Constants.MotorSpeeds.wristPower); //Move the wrist up
-            } else if (Robot.wristSubsystem.getWristPosition() > Constants.Reef.targetCoralIntakeAngle) {
-                Robot.wristSubsystem.setWristSpeed(-Constants.MotorSpeeds.wristPower);
+            // set arm to correct angle
+            current_angle = Robot.wristSubsystem.getWristPosition();
+            // Calculate power curve proportional
+            double armRotationPower = Math.abs(Constants.Reef.travelAngle - current_angle) / 100;
+            // Move arm up or down to target arm angle
+            if (Math.abs(Constants.Reef.travelAngle - current_angle) > Constants.Tolerances.coralIntakeAngleTolerance) {
+                double v_sign = Math.signum(Constants.Reef.travelAngle - current_angle);
+                Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
             } else {
                 Robot.wristSubsystem.stopWrist();
                 isAtAngle = true;
+            }
+            // set height to correct
+            current_height = Robot.elevatorSubsystem.getCurrentHeight();
+            // Move elevator up or down to target height
+            if (
+                Math.abs(Constants.Reef.targetCoralIntakeHeight - current_height) >
+                Constants.Tolerances.reefHeightTolerance
+            ) {
+                double v_sign = Math.signum(Constants.Reef.targetCoralIntakeHeight - current_height);
+                Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
+            } else {
+                Robot.elevatorSubsystem.stopElevator();
+                isAtHeight = true;
             }
         }
     }

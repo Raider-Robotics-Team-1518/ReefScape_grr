@@ -18,10 +18,13 @@ import org.team1518.lib.util.Profiler;
 import org.team1518.lib.util.Tunable;
 import org.team1518.robot.commands.Autos;
 import org.team1518.robot.commands.Routines;
+import org.team1518.robot.commands.gamepiecemanipulator.EjectCoral;
 import org.team1518.robot.commands.gamepiecemanipulator.IntakeCoral;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualIntake;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualLift;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualWrist;
+import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
+import org.team1518.robot.commands.gamepiecemanipulator.SetTravelPosition;
 import org.team1518.robot.subsystems.Blinkies;
 import org.team1518.robot.subsystems.ElevatorSubsystem;
 import org.team1518.robot.subsystems.GamePieceManipulator;
@@ -76,7 +79,7 @@ public final class Robot extends TimedRobot {
         buttonBox = new CommandGenericHID(Constants.kButtonBox);
 
         // Set default commands
-        swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> driver.getZ()));
+        swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.75));
 
         // Create triggers
         RobotModeTriggers.autonomous().whileTrue(GRRDashboard.runSelectedAuto());
@@ -87,10 +90,14 @@ public final class Robot extends TimedRobot {
         // Co-driver bindings
         coDriver.x().whileTrue(new ManualWrist(0.25)); //.onFalse(new ManualWrist(0));
         coDriver.a().whileTrue(new ManualWrist(-0.25)); //.onFalse(new ManualWrist(0));
-        coDriver.y().whileTrue(new ManualLift(1.0));
-        coDriver.b().whileTrue(new ManualLift(-0.80));
+        coDriver.y().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPower));
+        coDriver.b().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPowerDn));
         coDriver.rightTrigger().whileTrue(new ManualIntake(0.25)); //.onFalse(new ManualIntake(0));
-        buttonBox.button(10).onTrue(new IntakeCoral());
+        buttonBox.button(10).onTrue(new IntakeCoral().andThen(new SetTravelPosition()));
+        buttonBox.button(4).onTrue(new RaiseLift(1).andThen(new EjectCoral(1)));
+        buttonBox.button(3).onTrue(new RaiseLift(2).andThen(new EjectCoral(2)));
+        buttonBox.button(2).onTrue(new RaiseLift(3).andThen(new EjectCoral(3)));
+        buttonBox.button(1).onTrue(new RaiseLift(4).andThen(new EjectCoral(4)));
     }
 
     @Override
