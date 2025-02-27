@@ -4,47 +4,77 @@
 
 package org.team1518.robot.commands.gamepiecemanipulator;
 
-import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
 
 public class IntakeAlgae extends Command {
 
-    private Timer timer;
+    // private Timer timer;
+    private int level = 0;
     private boolean isDone = false;
-    private double current_angle = Robot.wristSubsystem.getWristPosition();
+    private boolean isAtAngle = false;
+    private boolean isAlgaeLoaded = false;
+    private boolean isAtHeight = false;
+    private double current_angle = 0;
     private double targetAlgaeIntakeAngle = Constants.Reef.targetAlgaeIntakeAngle;
+    private double current_height = 0;
+    private double targetHeight = 0;
 
-    public IntakeAlgae(double targetAlgaeIntakeAngle) {
-        addRequirements(Robot.wristSubsystem, Robot.gamePieceManipulator);
-        this.targetAlgaeIntakeAngle = targetAlgaeIntakeAngle;
+    public IntakeAlgae(int level) {
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(Robot.wristSubsystem, Robot.elevatorSubsystem, Robot.gamePieceManipulator);
+        //this.targetAlgaeIntakeAngle = targetAlgaeIntakeAngle;
+        // level will be one of LOW, 2, 3
+        this.level = level;
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        timer = new Timer();
+        // timer = new Timer();
+        isDone = false;
+        isAtAngle = false;
+        isAlgaeLoaded = false;
+        isAtHeight = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        timer.start();
-        current_angle = Robot.wristSubsystem.getWristPosition();
-        // Calculate power curve proportional
-        double armRotationPower = Math.abs(this.targetAlgaeIntakeAngle - current_angle) / 100;
-        // Move arm up or down to target arm angle
-        if (Math.abs(this.targetAlgaeIntakeAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance) {
-            double v_sign = Math.signum(this.targetAlgaeIntakeAngle - current_angle);
-            Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
+        if (isAtAngle && isAlgaeLoaded && isAtHeight) {
+            isDone = true;
         } else {
-            // the arm's at the correct angle, stop arm, intake the algae
-            Robot.wristSubsystem.setWristSpeed(0d);
-            Robot.gamePieceManipulator.intakeAlgae();
-            if (timer.hasElapsed(Constants.Times.algaeMotorRunTime)) {
-                isDone = true;
-                isFinished();
+            // set arm to correct angle
+            current_angle = Robot.wristSubsystem.getWristPosition();
+            // Calculate power curve proportional
+            double armRotationPower = Math.abs(this.targetAlgaeIntakeAngle - current_angle) / 300;
+            // Move arm up or down to target arm angle
+            if (
+                Math.abs(this.targetAlgaeIntakeAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance
+            ) {
+                double v_sign = Math.signum(this.targetAlgaeIntakeAngle - current_angle);
+                Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
+            } else {
+                isAtAngle = true;
+            }
+            // set height to correct
+            current_height = Robot.elevatorSubsystem.getCurrentHeight();
+            targetHeight = Constants.Reef.algaeLevels[this.level];
+            // Move elevator up or down to target height
+            if (Math.abs(targetHeight - current_height) > Constants.Tolerances.reefAlgaeHeightTolerance) {
+                double v_sign = Math.signum(targetHeight - current_height);
+                Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
+            } else {
+                Robot.elevatorSubsystem.stopElevator();
+                isAtHeight = true;
+            }
+            if (!Robot.gamePieceManipulator.isAlgaeLoaded()) {
+                Robot.gamePieceManipulator.intakeAlgae();
+            } else {
+                Robot.gamePieceManipulator.stopGamePieceMotor();
+                isAlgaeLoaded = true;
             }
         }
     }
@@ -52,8 +82,11 @@ public class IntakeAlgae extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        timer.stop();
+        // timer.stop();
+        Robot.wristSubsystem.stopWrist();
         Robot.gamePieceManipulator.stopAlgaeMotor();
+        Robot.elevatorSubsystem.stopElevator();
+        isDone = true;
     }
 
     // Returns true when the command should end.

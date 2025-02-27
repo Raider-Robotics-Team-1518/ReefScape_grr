@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import org.team1518.robot.Robot;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class ManualIntake extends Command {
+public class ManualAlgaeIntake extends Command {
 
-    /** Creates a new ManualIntake. */
+    /** Creates a new ManualAlgaeIntake. */
     private double speed = 0;
     private boolean isDone = false;
 
-    public ManualIntake(double speed) {
+    public ManualAlgaeIntake(double speed) {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.gamePieceManipulator);
         this.speed = speed;

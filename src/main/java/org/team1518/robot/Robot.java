@@ -19,10 +19,13 @@ import org.team1518.lib.util.Tunable;
 import org.team1518.robot.commands.Autos;
 import org.team1518.robot.commands.Routines;
 import org.team1518.robot.commands.gamepiecemanipulator.EjectCoral;
+import org.team1518.robot.commands.gamepiecemanipulator.IntakeAlgae;
 import org.team1518.robot.commands.gamepiecemanipulator.IntakeCoral;
-import org.team1518.robot.commands.gamepiecemanipulator.ManualIntake;
+import org.team1518.robot.commands.gamepiecemanipulator.ManualAlgaeIntake;
+import org.team1518.robot.commands.gamepiecemanipulator.ManualCoralIntake;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualLift;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualWrist;
+import org.team1518.robot.commands.gamepiecemanipulator.MoveToBarge;
 import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
 import org.team1518.robot.commands.gamepiecemanipulator.SetTravelPosition;
 import org.team1518.robot.subsystems.Blinkies;
@@ -88,12 +91,17 @@ public final class Robot extends TimedRobot {
         //driver.povLeft().onTrue(swerve.tareRotation());
 
         // Co-driver bindings
-        coDriver.x().whileTrue(new ManualWrist(0.25)); //.onFalse(new ManualWrist(0));
+        coDriver.y().whileTrue(new ManualWrist(0.25)); //.onFalse(new ManualWrist(0));
         coDriver.a().whileTrue(new ManualWrist(-0.25)); //.onFalse(new ManualWrist(0));
-        coDriver.y().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPower));
-        coDriver.b().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPowerDn));
-        coDriver.rightTrigger().whileTrue(new ManualIntake(0.25)); //.onFalse(new ManualIntake(0));
+        coDriver.povUp().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPower));
+        coDriver.povDown().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPowerDn));
+        coDriver.rightTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualEjectMotorSpeed));
+        coDriver.leftTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualIntakeMotorSpeed)); //.onFalse(new ManualAlgaeIntake(0));
+        coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed)); //.onFalse(new ManualCoralIntake(0));
         buttonBox.button(10).onTrue(new IntakeCoral().andThen(new SetTravelPosition()));
+        buttonBox.button(9).onTrue(new MoveToBarge());
+        buttonBox.button(6).onTrue(new IntakeAlgae(2)/*.andThen(new SetTravelPosition())*/);
+        buttonBox.button(7).onTrue(new IntakeAlgae(3)/*.andThen(new SetTravelPosition())*/);
         buttonBox.button(4).onTrue(new RaiseLift(1).andThen(new EjectCoral(1)));
         buttonBox.button(3).onTrue(new RaiseLift(2).andThen(new EjectCoral(2)));
         buttonBox.button(2).onTrue(new RaiseLift(3).andThen(new EjectCoral(3)));

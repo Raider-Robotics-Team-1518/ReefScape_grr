@@ -39,7 +39,7 @@ public class GamePieceManipulator extends SubsystemBase {
 
     public boolean isAlgaeLoaded() {
         // read the color/presence sensor to see if the coral has been loaded
-        boolean algaeIsLoaded = m_algaeColorSensor.getProximity() > 1536;
+        boolean algaeIsLoaded = m_algaeColorSensor.getProximity() > 512;
         return algaeIsLoaded;
     }
 

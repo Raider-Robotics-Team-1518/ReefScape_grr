@@ -54,7 +54,7 @@ public class IntakeCoral extends Command {
             // set height to correct
             current_height = Robot.elevatorSubsystem.getCurrentHeight();
             // Move elevator up or down to target height
-            if (Math.abs(targetIntakeHeight - current_height) > Constants.Tolerances.reefHeightTolerance) {
+            if (Math.abs(targetIntakeHeight - current_height) > Constants.Tolerances.reefCoralHeightTolerance) {
                 double v_sign = Math.signum(targetIntakeHeight - current_height);
                 Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
             } else {

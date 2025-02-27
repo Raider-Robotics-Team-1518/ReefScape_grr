@@ -32,7 +32,7 @@ public class RaiseToCoralIntake extends Command {
     /* @Override
     public void execute() {
         currentHeight = Robot.elevatorSubsystem.getCurrentHeight();
-        if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefHeightTolerance) {
+        if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefCoralHeightTolerance) {
             double v_sign = Math.signum(targetHeight - currentHeight);
             Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
         } else {
@@ -49,7 +49,7 @@ public class RaiseToCoralIntake extends Command {
             // set height to correct
             currentHeight = Robot.elevatorSubsystem.getCurrentHeight();
             // Move arm up or down to target arm angle
-            if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefHeightTolerance) {
+            if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefCoralHeightTolerance) {
                 double v_sign = Math.signum(targetHeight - currentHeight);
                 Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
             } else {

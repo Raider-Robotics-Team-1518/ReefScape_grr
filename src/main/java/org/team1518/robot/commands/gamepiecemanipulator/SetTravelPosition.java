@@ -50,7 +50,7 @@ public class SetTravelPosition extends Command {
             // Move elevator up or down to target height
             if (
                 Math.abs(Constants.Reef.targetCoralIntakeHeight - current_height) >
-                Constants.Tolerances.reefHeightTolerance
+                Constants.Tolerances.reefCoralHeightTolerance
             ) {
                 double v_sign = Math.signum(Constants.Reef.targetCoralIntakeHeight - current_height);
                 Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));

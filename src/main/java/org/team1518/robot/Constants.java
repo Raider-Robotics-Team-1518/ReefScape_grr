@@ -75,7 +75,7 @@ public final class Constants {
         // Per Q&A system: "Keep in mind that dimensions on the REEF
         // and other structures have a tolerance of +/- 1/2 in. to
         // accommodate variances in manufacturing and assembly."
-        public static final double[] levels = {
+        public static final double[] coralLevels = {
             0, // we ignore this level, leave at 0
             0, // height in inches of level 1 of the reef
             5, // level 2
@@ -84,20 +84,27 @@ public final class Constants {
         };
         // elevator to intake height
         public static final double targetCoralIntakeHeight = 5.9;
+        public static final double[] algaeLevels = {
+            0, // we ignore this level, leave at 0
+            0, // level LOW
+            9.8, // level 2
+            20.6 // level 3
+        };
         // optimal angle in degrees to eject coral onto level 1
         public static final double coralEjectAngleLevel1 = 0; // nearly horizontal
         public static final double coralEjectAngleLevel23 = 0;
         public static final double coralEjectAngleLevel4 = -46; // vertical
         // optimal angle in degrees for ejecting algae into the processor
-        public static final double algaeEjectArmAngle = -20;
+        public static final double targetAlgaeEjectAngle = -20;
         public static final double targetCoralIntakeAngle = -95;
-        public static final double targetAlgaeIntakeAngle = -20;
+        public static final double targetAlgaeIntakeAngle = -134;
         public static final double travelAngle = -39;
     }
 
     public static final class Tolerances {
 
-        public static final double reefHeightTolerance = 1.0; // tolerance for height of the reef levels
+        public static final double reefCoralHeightTolerance = 1.0; // tolerance for height of the reef coral levels
+        public static final double reefAlgaeHeightTolerance = 1.0; // tolerance for height of the reef algae levels
         public static final double coralEjectAngleTolerance = 0.1; // angle of coral manipulator arm
         public static final double coralIntakeAngleTolerance = 0.1;
         public static final double algaeEjectAngleTolerance = 0.1;
@@ -111,10 +118,14 @@ public final class Constants {
         public static final double elevatorPowerDn = -0.75;
         public static final double wristPower = 0.25;
         // TODO: either intake or eject need to have negative values
-        public static final double coralEjectMotorSpeed = 0.2;
+        public static final double coralEjectMotorSpeed = -0.2;
         public static final double coralIntakeMotorSpeed = 0.2;
+        public static final double coralManualEjectMotorSpeed = -0.2;
+        public static final double coralManualIntakeMotorSpeed = 0.2;
         public static final double algaeEjectMotorSpeed = 0.5;
-        public static final double algaeIntakeMotorSpeed = 0.5;
+        public static final double algaeIntakeMotorSpeed = -0.5;
+        public static final double algaeManualEjectMotorSpeed = 0.5;
+        public static final double algaeManualIntakeMotorSpeed = -0.5;
     }
 
     public static final class Times {
