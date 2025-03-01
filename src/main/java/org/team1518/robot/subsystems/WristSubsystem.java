@@ -6,7 +6,7 @@ package org.team1518.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1518.robot.Constants;
@@ -15,6 +15,7 @@ public class WristSubsystem extends SubsystemBase {
 
     private TalonFX wristMotor;
     private double coralArmPosition = 0;
+    private Encoder wristEncoder = new Encoder(2, 3);
 
     public WristSubsystem() {
         wristMotor = new TalonFX(Constants.Motors.wristMotorId);
@@ -27,7 +28,7 @@ public class WristSubsystem extends SubsystemBase {
         // positive for rotating towards a more vertical angle
         double currentWristPosition = getWristPosition();
         if (
-            (speed > 0 && currentWristPosition < Constants.Limits.wristMaxAngle) ||
+            (speed > 0 && currentWristPosition <= Constants.Limits.wristMaxAngle) ||
             (speed < 0 && currentWristPosition > Constants.Limits.wristMinAngle)
         ) {
             wristMotor.set(speed);
@@ -42,9 +43,9 @@ public class WristSubsystem extends SubsystemBase {
 
     public double getWristPosition() {
         // get the angle of the coral arm/wrist/whatever we're going to call it
-        coralArmPosition = wristMotor.getPosition().getValueAsDouble(); // rotations
+        coralArmPosition = wristEncoder.get();
         //coralArmPosition /= 100; // divide by gearbox ratio
-        return coralArmPosition * Constants.Factors.wristDegreesPerRevolution; // degrees, but should it be radians?
+        return coralArmPosition; // * Constants.Factors.wristDegreesPerRevolution; // degrees, but should it be radians?
     }
 
     @Override

@@ -13,8 +13,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
-  LimeLight wrapper class
-*/
+ * LimeLight wrapper class
+ */
 
 public class LimeLight {
 
@@ -44,90 +44,104 @@ public class LimeLight {
         return table.getTable(tableName).getEntry(key);
     }
 
-    //   private static void setTableEntry(String key, int value) {
-    //     NetworkTableEntry tableEntry = getTableEntry(key);
-    //     tableEntry.setNumber(value);
-    //   }
+    // private static void setTableEntry(String key, int value) {
+    // NetworkTableEntry tableEntry = getTableEntry(key);
+    // tableEntry.setNumber(value);
+    // }
 
     /* PUBLIC METHODS */
 
     /**
-    Determines if target is visible
-    @return true or false
-  */
+     * Determines if target is visible
+     *
+     * @return true or false
+     */
     public boolean isTargetVisible() {
         return getTableEntry("tv").getDouble(0) == 1;
     }
 
     /**
-    Horizontal offset from crosshair to target (LimeLight tx value)
-    @return double (+/-27 degrees)
-  */
+     * Horizontal offset from crosshair to target (LimeLight tx value)
+     *
+     * @return double (+/-27 degrees)
+     */
     public double getTargetOffsetHorizontal() {
         return getTableEntry("tx").getDouble(0.00);
     }
 
     /**
-    Vertical offset from crosshair to target (LimeLight ty value)
-    @return double (+/-20.5 degrees)
-  */
+     * Vertical offset from crosshair to target (LimeLight ty value)
+     *
+     * @return double (+/-20.5 degrees)
+     */
     public double getTargetOffsetVertical() {
         return getTableEntry("ty").getDouble(0.00);
     }
 
     /**
+     * Using Distnace Sensor
      * Distance to the target in inches
+     *
      * @return double (inches)
      */
-    public double getDistanceToTarget(int aprilTagId) {
-        // function to get distance to april tag
-        // double angleToGoalDegrees = Constants.FieldPositions.limelightMountingAngle + getTargetOffsetVertical();
-        // double angleToGoalRadians = angleToGoalDegrees * 0.01745327778; // (3.14159 / 180.0);
+    public double getDistanceToTarget() {
+        if (Robot.distanceSensor.isRangeValid()) {
+            return Robot.distanceSensor.getRange();
+        }
+        return 0;
+    }
 
-        double goalHeightInches = 0;
-        // double distance = (goalHeightInches - Constants.FieldPositions.limelightMountingHeight) / Math.tan(angleToGoalRadians);
-        // return distance;
-        return 0d;
+    public double getHorizontalOffset(int aprilTagId) {
+        // function to get angle of robot to april tag
+        double angleToTagDegrees = getTargetOffsetHorizontal();
+        double angleToTagRadians = angleToTagDegrees * 0.01745327778; // (3.14159 / 180.0);
+
+        double distance = (getDistanceToTarget()) * Math.tan(angleToTagRadians);
+        return distance;
     }
 
     public double getOptimalArmAngle(double distance) {
         /*
          * Computed formula:
-         *  from Mr. Barnes and students' spreadsheet
-         *  181 -6.7 * distance + 0.27 * Math.pow(distance, 2)
+         * from Mr. Barnes and students' spreadsheet
+         * 181 -6.7 * distance + 0.27 * Math.pow(distance, 2)
          */
         final double distanceInFeet = distance / 12;
         return 178 - 6.7 * distanceInFeet + 0.27 * Math.pow(distanceInFeet, 2);
     }
 
     /**
-    Target area as percentage of camera FOV (LimeLight ta value)
-    @return double (0-100)
-  */
+     * Target area as percentage of camera FOV (LimeLight ta value)
+     *
+     * @return double (0-100)
+     */
     public double getTargetArea() {
         return getTableEntry("ta").getDouble(0.00);
     }
 
     /**
-    Target skew (LimeLight ts value)
-    @return double (-90 to 0 degrees)
-  */
+     * Target skew (LimeLight ts value)
+     *
+     * @return double (-90 to 0 degrees)
+     */
     public double getTargetSkew() {
         return getTableEntry("ts").getDouble(0.00);
     }
 
     /**
-    Pipeline latency (LimeLight tl value)
-    @return double (milliseconds)
-  */
+     * Pipeline latency (LimeLight tl value)
+     *
+     * @return double (milliseconds)
+     */
     public double getPipelineLatency() {
         return getTableEntry("tl").getDouble(0.00);
     }
 
     /**
-    Total latency (LimeLight tl value + 11 ms for image capture)
-    @return double (milliseconds)
-  */
+     * Total latency (LimeLight tl value + 11 ms for image capture)
+     *
+     * @return double (milliseconds)
+     */
     public double getLatency() {
         Double latency = getTableEntry("tl").getDouble(0.00);
         if (latency == 0) {
@@ -137,17 +151,19 @@ public class LimeLight {
     }
 
     /**
-    Height of the rough bounding box (LimeLight tvert value)
-    @return double (0-320 pixels)
-  */
+     * Height of the rough bounding box (LimeLight tvert value)
+     *
+     * @return double (0-320 pixels)
+     */
     public double getBoundingBoxHeight() {
         return getTableEntry("tvert").getDouble(0.00);
     }
 
     /**
-    Width of the rough bounding box (LimeLight thor value)
-    @return double (0-320 pixels)
-  */
+     * Width of the rough bounding box (LimeLight thor value)
+     *
+     * @return double (0-320 pixels)
+     */
     public double getBoundingBoxWidth() {
         return getTableEntry("thor").getDouble(0.00);
     }
@@ -155,34 +171,37 @@ public class LimeLight {
     /* ***** SETTERS ***** */
 
     /**
-    Set LED ring mode
-    @param mode LightMode
-    @example
-      LimeLight targetingLimeLight = new LimeLight('targeting_limelight');
-      targetingLimeLight.setLedMode(LimeLight.LightMode.on);
-  */
+     * Set LED ring mode
+     *
+     * @param mode LightMode
+     * @example
+     *          LimeLight targetingLimeLight = new LimeLight('targeting_limelight');
+     *          targetingLimeLight.setLedMode(LimeLight.LightMode.on);
+     */
     public static void setLedMode(LightMode mode) {
         getTableEntry("ledMode").setNumber(mode.ordinal());
     }
 
     /**
-    Set camera mode
-    @param mode CameraMode
-    @example
-      LimeLight targetingLimeLight = new LimeLight('targeting_limelight');
-      targetingLimeLight.setCameraMode(LimeLight.CameraMode.vision);
-  */
+     * Set camera mode
+     *
+     * @param mode CameraMode
+     * @example
+     *          LimeLight targetingLimeLight = new LimeLight('targeting_limelight');
+     *          targetingLimeLight.setCameraMode(LimeLight.CameraMode.vision);
+     */
     public static void setCameraMode(CameraMode mode) {
         getTableEntry("camMode").setNumber(mode.ordinal());
     }
 
     /**
-    Set pipeline (integer from 0 to 9)
-    @param number int
-    @example
-      LimeLight targetingLimeLight = new LimeLight('targeting_limelight');
-      targetingLimeLight.setPipeline(2);
-  */
+     * Set pipeline (integer from 0 to 9)
+     *
+     * @param number int
+     * @example
+     *          LimeLight targetingLimeLight = new LimeLight('targeting_limelight');
+     *          targetingLimeLight.setPipeline(2);
+     */
     public static void setPipeline(int number) {
         getTableEntry("pipeline").setNumber(number);
     }

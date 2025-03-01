@@ -12,10 +12,8 @@ import org.team1518.robot.Robot;
 public class SetTravelPosition extends Command {
 
     private boolean isDone = false;
-    private boolean isAtHeight = false;
     private boolean isAtAngle = false;
     private double current_angle = 0;
-    private double current_height = 0;
 
     /** Creates a new SetTravelPosition. */
     public SetTravelPosition() {
@@ -25,12 +23,17 @@ public class SetTravelPosition extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        current_angle = Robot.wristSubsystem.getWristPosition();
+        if (Math.abs(Constants.Reef.travelAngle - current_angle) > Constants.Tolerances.travelPositionAngleTolerance) {
+            isAtAngle = true;
+        }
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (isAtHeight && isAtAngle) {
+        if (isAtAngle) {
             isDone = true;
         } else {
             // set arm to correct angle
@@ -38,25 +41,15 @@ public class SetTravelPosition extends Command {
             // Calculate power curve proportional
             double armRotationPower = Math.abs(Constants.Reef.travelAngle - current_angle) / 100;
             // Move arm up or down to target arm angle
-            if (Math.abs(Constants.Reef.travelAngle - current_angle) > Constants.Tolerances.coralIntakeAngleTolerance) {
+            if (
+                Math.abs(Constants.Reef.travelAngle - current_angle) > Constants.Tolerances.travelPositionAngleTolerance
+            ) {
                 double v_sign = Math.signum(Constants.Reef.travelAngle - current_angle);
                 Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
             } else {
                 Robot.wristSubsystem.stopWrist();
                 isAtAngle = true;
-            }
-            // set height to correct
-            current_height = Robot.elevatorSubsystem.getCurrentHeight();
-            // Move elevator up or down to target height
-            if (
-                Math.abs(Constants.Reef.targetCoralIntakeHeight - current_height) >
-                Constants.Tolerances.reefCoralHeightTolerance
-            ) {
-                double v_sign = Math.signum(Constants.Reef.targetCoralIntakeHeight - current_height);
-                Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
-            } else {
-                Robot.elevatorSubsystem.stopElevator();
-                isAtHeight = true;
+                isDone = true;
             }
         }
     }

@@ -38,6 +38,9 @@ public final class Constants {
         public static final int kBrEncoder = 14;
 
         public static final int kCanandgyro = 20;
+
+        public static final double limelightMountingAngle = 20;
+        public static final double limelightMountingHeight = 8;
     }
 
     public static class OperatorConstants {
@@ -98,7 +101,7 @@ public final class Constants {
         public static final double targetAlgaeEjectAngle = -20;
         public static final double targetCoralIntakeAngle = -95;
         public static final double targetAlgaeIntakeAngle = -134;
-        public static final double travelAngle = -39;
+        public static final double travelAngle = -55;
     }
 
     public static final class Tolerances {
@@ -110,6 +113,7 @@ public final class Constants {
         public static final double algaeEjectAngleTolerance = 0.1;
         public static final double algaeIntakeAngleTolerance = 0.1;
         public static final double minElevatorHeightTolerance = 1.0;
+        public static final double travelPositionAngleTolerance = 1.0;
     }
 
     public static final class MotorSpeeds {

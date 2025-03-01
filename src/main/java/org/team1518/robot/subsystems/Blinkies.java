@@ -53,7 +53,7 @@ public class Blinkies extends SubsystemBase {
 
                 SmartDashboard.putString("alliance color", allianceColor.toString());
                 if (fID > 0) {
-                    double distance = limelight.getDistanceToTarget(fID);
+                    double distance = limelight.getDistanceToTarget();
                     SmartDashboard.putNumber("Distance", Utils.round2prec(distance, 1));
 
                     if (distance > 0) {

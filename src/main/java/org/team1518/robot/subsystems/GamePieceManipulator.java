@@ -13,9 +13,6 @@ import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import java.lang.reflect.GenericSignatureFormatError;
-
 import org.team1518.robot.Constants;
 
 public class GamePieceManipulator extends SubsystemBase {
