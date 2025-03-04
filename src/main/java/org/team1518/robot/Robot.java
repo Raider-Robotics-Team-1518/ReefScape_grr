@@ -21,14 +21,14 @@ import org.team1518.lib.util.Profiler;
 import org.team1518.lib.util.Tunable;
 import org.team1518.robot.commands.Autos;
 import org.team1518.robot.commands.Routines;
-import org.team1518.robot.commands.gamepiecemanipulator.EjectCoral;
-import org.team1518.robot.commands.gamepiecemanipulator.IntakeAlgae;
+import org.team1518.robot.commands.gamepiecemanipulator.IntakeAlgaeReef;
 import org.team1518.robot.commands.gamepiecemanipulator.IntakeCoral;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualAlgaeIntake;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualCoralIntake;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualLift;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualWrist;
 import org.team1518.robot.commands.gamepiecemanipulator.MoveToBarge;
+import org.team1518.robot.commands.gamepiecemanipulator.MoveToEjectCoralAngle;
 import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
 import org.team1518.robot.commands.gamepiecemanipulator.SetTravelPosition;
 import org.team1518.robot.subsystems.Blinkies;
@@ -109,12 +109,20 @@ public final class Robot extends TimedRobot {
         // ManualCoralIntake(0));
         buttonBox.button(10).onTrue(new IntakeCoral().andThen(new SetTravelPosition()));
         buttonBox.button(9).onTrue(new SetTravelPosition().andThen(new MoveToBarge()));
-        buttonBox.button(6).onTrue(new IntakeAlgae(2)/* .andThen(new SetTravelPosition()) */);
-        buttonBox.button(7).onTrue(new IntakeAlgae(3)/* .andThen(new SetTravelPosition()) */);
-        buttonBox.button(4).onTrue(new SetTravelPosition().andThen(new RaiseLift(1)).andThen(new EjectCoral(1)));
-        buttonBox.button(3).onTrue(new SetTravelPosition().andThen(new RaiseLift(2)).andThen(new EjectCoral(2)));
-        buttonBox.button(2).onTrue(new SetTravelPosition().andThen(new RaiseLift(3)).andThen(new EjectCoral(3)));
-        buttonBox.button(1).onTrue(new SetTravelPosition().andThen(new RaiseLift(4)).andThen(new EjectCoral(4)));
+        buttonBox.button(6).onTrue(new IntakeAlgaeReef(2)/* .andThen(new SetTravelPosition()) */);
+        buttonBox.button(7).onTrue(new IntakeAlgaeReef(3)/* .andThen(new SetTravelPosition()) */);
+        buttonBox
+            .button(4)
+            .onTrue(new SetTravelPosition().andThen(new RaiseLift(1)).andThen(new MoveToEjectCoralAngle(1)));
+        buttonBox
+            .button(3)
+            .onTrue(new SetTravelPosition().andThen(new RaiseLift(2)).andThen(new MoveToEjectCoralAngle(2)));
+        buttonBox
+            .button(2)
+            .onTrue(new SetTravelPosition().andThen(new RaiseLift(3)).andThen(new MoveToEjectCoralAngle(3)));
+        buttonBox
+            .button(1)
+            .onTrue(new SetTravelPosition().andThen(new RaiseLift(4)).andThen(new MoveToEjectCoralAngle(4)));
     }
 
     @Override

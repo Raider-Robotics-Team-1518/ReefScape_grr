@@ -63,14 +63,14 @@ public final class Constants {
 
         public static final double elevatorMax = 52.625; // encoder count 9500;
         public static final double elevatorMin = 0.25; // encoder count 0;
-        public static final double wristMinAngle = -180;
-        public static final double wristMaxAngle = 0;
+        public static final double wristMinAngle = -178;
+        public static final double wristMaxAngle = -1;
     }
 
     public static class Factors {
 
         public static final double elevatorInchesPerRevolution = 182.04; // Encoder Count 9530 / Total Height Change 52.625
-        public static final double wristDegreesPerRevolution = 3.6; // 100:1 ratio gives 360 / 100
+        public static final double wristDegreesPerEncoderCount = 0.179; // Thru-bore Encoder 1:1 Ratio  182/1024
     }
 
     public static class Reef {
@@ -98,9 +98,11 @@ public final class Constants {
         public static final double coralEjectAngleLevel23 = 0;
         public static final double coralEjectAngleLevel4 = -46; // vertical
         // optimal angle in degrees for ejecting algae into the processor
-        public static final double targetAlgaeEjectAngle = -20;
+        public static final double targetAlgaeEjectBargeAngle = -20;
+        public static final double targetAlgaeEjectProcessorAngle = -20;
         public static final double targetCoralIntakeAngle = -95;
-        public static final double targetAlgaeIntakeAngle = -134;
+        public static final double targetAlgaeIntakeReefAngle = -134;
+        public static final double targetAlgaeIntakeGroundAngle = -134;
         public static final double travelAngle = -55;
     }
 
@@ -108,10 +110,10 @@ public final class Constants {
 
         public static final double reefCoralHeightTolerance = 1.0; // tolerance for height of the reef coral levels
         public static final double reefAlgaeHeightTolerance = 1.0; // tolerance for height of the reef algae levels
-        public static final double coralEjectAngleTolerance = 0.1; // angle of coral manipulator arm
-        public static final double coralIntakeAngleTolerance = 0.1;
-        public static final double algaeEjectAngleTolerance = 0.1;
-        public static final double algaeIntakeAngleTolerance = 0.1;
+        public static final double coralEjectAngleTolerance = 2.0; // angle of coral manipulator arm
+        public static final double coralIntakeAngleTolerance = 2.0;
+        public static final double algaeEjectAngleTolerance = 2.0;
+        public static final double algaeIntakeAngleTolerance = 2.0;
         public static final double minElevatorHeightTolerance = 1.0;
         public static final double travelPositionAngleTolerance = 1.0;
     }
@@ -121,8 +123,7 @@ public final class Constants {
         public static final double elevatorPower = 0.9;
         public static final double elevatorPowerDn = -0.75;
         public static final double wristPower = 0.25;
-        // TODO: either intake or eject need to have negative values
-        public static final double coralEjectMotorSpeed = -0.2;
+        public static final double coralEjectMotorSpeed = 0.2;
         public static final double coralIntakeMotorSpeed = 0.2;
         public static final double coralManualEjectMotorSpeed = -0.2;
         public static final double coralManualIntakeMotorSpeed = 0.2;

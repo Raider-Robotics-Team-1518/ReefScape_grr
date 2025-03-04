@@ -57,13 +57,13 @@ public class MoveToBarge extends Command {
                 // set arm to correct angle
                 current_angle = Robot.wristSubsystem.getWristPosition();
                 // Calculate power curve proportional
-                double armRotationPower = Math.abs(Constants.Reef.targetAlgaeEjectAngle - current_angle) / 300;
+                double armRotationPower = Math.abs(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle) / 300;
                 // Move arm up or down to target arm angle
                 if (
-                    Math.abs(Constants.Reef.targetAlgaeEjectAngle - current_angle) >
+                    Math.abs(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle) >
                     Constants.Tolerances.coralIntakeAngleTolerance
                 ) {
-                    double v_sign = Math.signum(Constants.Reef.targetAlgaeEjectAngle - current_angle);
+                    double v_sign = Math.signum(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle);
                     Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
                 } else {
                     isDone = true;

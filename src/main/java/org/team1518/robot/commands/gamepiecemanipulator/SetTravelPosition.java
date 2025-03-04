@@ -23,34 +23,21 @@ public class SetTravelPosition extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {
-        current_angle = Robot.wristSubsystem.getWristPosition();
-        if (Math.abs(Constants.Reef.travelAngle - current_angle) > Constants.Tolerances.travelPositionAngleTolerance) {
-            isAtAngle = true;
-        }
-    }
+    public void initialize() {}
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (isAtAngle) {
+        current_angle = Robot.wristSubsystem.getWristPosition();
+        if (Math.abs(Constants.Reef.travelAngle - current_angle) <= Constants.Tolerances.travelPositionAngleTolerance) {
             isDone = true;
         } else {
             // set arm to correct angle
-            current_angle = Robot.wristSubsystem.getWristPosition();
             // Calculate power curve proportional
-            double armRotationPower = Math.abs(Constants.Reef.travelAngle - current_angle) / 100;
+            double armRotationPower = Math.abs(Constants.Reef.travelAngle - current_angle) / 50;
             // Move arm up or down to target arm angle
-            if (
-                Math.abs(Constants.Reef.travelAngle - current_angle) > Constants.Tolerances.travelPositionAngleTolerance
-            ) {
-                double v_sign = Math.signum(Constants.Reef.travelAngle - current_angle);
-                Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
-            } else {
-                Robot.wristSubsystem.stopWrist();
-                isAtAngle = true;
-                isDone = true;
-            }
+            double v_sign = Math.signum(Constants.Reef.travelAngle - current_angle);
+            Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
         }
     }
 

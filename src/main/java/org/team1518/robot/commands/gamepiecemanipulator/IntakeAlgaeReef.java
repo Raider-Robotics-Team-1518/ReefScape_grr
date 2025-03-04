@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
 
-public class IntakeAlgae extends Command {
+public class IntakeAlgaeReef extends Command {
 
     // private Timer timer;
     private int level = 0;
@@ -18,11 +18,11 @@ public class IntakeAlgae extends Command {
     private boolean isAlgaeLoaded = false;
     private boolean isAtHeight = false;
     private double current_angle = 0;
-    private double targetAlgaeIntakeAngle = Constants.Reef.targetAlgaeIntakeAngle;
+    private double targetAlgaeIntakeAngle = Constants.Reef.targetAlgaeIntakeReefAngle;
     private double current_height = 0;
     private double targetHeight = 0;
 
-    public IntakeAlgae(int level) {
+    public IntakeAlgaeReef(int level) {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.wristSubsystem, Robot.elevatorSubsystem, Robot.gamePieceManipulator);
         //this.targetAlgaeIntakeAngle = targetAlgaeIntakeAngle;

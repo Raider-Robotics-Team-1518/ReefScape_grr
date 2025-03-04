@@ -28,13 +28,16 @@ public class RaiseLift extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        targetHeight = Constants.Reef.coralLevels[this.level];
+        isDone = false;
+        
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         currentHeight = Robot.elevatorSubsystem.getCurrentHeight();
-        targetHeight = Constants.Reef.coralLevels[this.level];
         if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefCoralHeightTolerance) {
             double v_sign = Math.signum(targetHeight - currentHeight);
             Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));

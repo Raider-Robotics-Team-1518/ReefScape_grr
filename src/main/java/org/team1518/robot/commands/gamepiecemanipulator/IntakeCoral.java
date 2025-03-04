@@ -43,7 +43,7 @@ public class IntakeCoral extends Command {
             // set arm to correct angle
             current_angle = Robot.wristSubsystem.getWristPosition();
             // Calculate power curve proportional
-            double armRotationPower = Math.abs(this.targetIntakeAngle - current_angle) / 300;
+            double armRotationPower = Math.abs(this.targetIntakeAngle - current_angle) / 100;
             // Move arm up or down to target arm angle
             if (Math.abs(this.targetIntakeAngle - current_angle) > Constants.Tolerances.coralIntakeAngleTolerance) {
                 double v_sign = Math.signum(this.targetIntakeAngle - current_angle);

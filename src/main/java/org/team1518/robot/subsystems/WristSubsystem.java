@@ -28,7 +28,7 @@ public class WristSubsystem extends SubsystemBase {
         // positive for rotating towards a more vertical angle
         double currentWristPosition = getWristPosition();
         if (
-            (speed > 0 && currentWristPosition <= Constants.Limits.wristMaxAngle) ||
+            (speed > 0 && currentWristPosition < Constants.Limits.wristMaxAngle) ||
             (speed < 0 && currentWristPosition > Constants.Limits.wristMinAngle)
         ) {
             wristMotor.set(speed);
@@ -45,7 +45,7 @@ public class WristSubsystem extends SubsystemBase {
         // get the angle of the coral arm/wrist/whatever we're going to call it
         coralArmPosition = wristEncoder.get();
         //coralArmPosition /= 100; // divide by gearbox ratio
-        return coralArmPosition; // * Constants.Factors.wristDegreesPerRevolution; // degrees, but should it be radians?
+        return coralArmPosition * Constants.Factors.wristDegreesPerEncoderCount; // degrees, but should it be radians?*/
     }
 
     @Override

@@ -8,21 +8,25 @@
 
 package org.team1518.robot.commands.gamepiecemanipulator;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
 
-public class EjectCoral extends Command {
+public class MoveToEjectCoralAngle extends Command {
 
-    private Timer timer;
     private boolean isDone = false;
     private double current_angle = Robot.wristSubsystem.getWristPosition();
     private double targetArmAngle = Constants.Reef.coralEjectAngleLevel23;
-    private double targetHeight = 0;
+    private int level = 0;
 
-    public EjectCoral(int level) {
-        addRequirements(Robot.wristSubsystem, Robot.wristSubsystem, Robot.elevatorSubsystem);
+    public MoveToEjectCoralAngle(int level) {
+        addRequirements(Robot.wristSubsystem);
+        this.level = level;
+    }
+
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
         if (level == 1) {
             this.targetArmAngle = Constants.Reef.coralEjectAngleLevel1;
         } else if (level == 2 || level == 3) {
@@ -30,41 +34,31 @@ public class EjectCoral extends Command {
         } else {
             this.targetArmAngle = Constants.Reef.coralEjectAngleLevel4;
         }
-    }
-
-    // Called when the command is initially scheduled.
-    @Override
-    public void initialize() {
-        timer = new Timer();
+        isDone = false;
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        timer.start();
         // set arm to correct angle
         current_angle = Robot.wristSubsystem.getWristPosition();
         // Calculate power curve proportional
-        double armRotationPower = Math.abs(this.targetArmAngle - current_angle) / 100;
+        double armRotationPower = Math.abs(this.targetArmAngle - current_angle) / 80;
         // Move arm up or down to target arm angle
         if (Math.abs(this.targetArmAngle - current_angle) > Constants.Tolerances.coralEjectAngleTolerance) {
             double v_sign = Math.signum(this.targetArmAngle - current_angle);
             Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
         } else {
             Robot.wristSubsystem.setWristSpeed(0d);
-            Robot.gamePieceManipulator.ejectCoral();
-            if (timer.hasElapsed(Constants.Times.coralEjectMotorRunTime)) {
-                isDone = true;
-                isFinished();
-            }
+            //Robot.gamePieceManipulator.ejectCoral();
+            isDone = true;
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        timer.stop();
-        Robot.gamePieceManipulator.stopCoralMotor();
+        Robot.wristSubsystem.stopWrist();
     }
 
     // Returns true when the command should end.
