@@ -18,7 +18,7 @@ public class IntakeAlgaeReef extends Command {
     private boolean isAlgaeLoaded = false;
     private boolean isAtHeight = false;
     private double current_angle = 0;
-    private double targetAlgaeIntakeAngle = Constants.Reef.targetAlgaeIntakeReefAngle;
+    private double targetAngle = 0;
     private double current_height = 0;
     private double targetHeight = 0;
 
@@ -43,20 +43,20 @@ public class IntakeAlgaeReef extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (isAtAngle && isAlgaeLoaded && isAtHeight) {
+        if (isAtAngle && isAtHeight && Robot.gamePieceManipulator.isAlgaeLoaded()) {
             isDone = true;
         } else {
             // set arm to correct angle
+            targetAngle = Constants.Reef.algaeAngles[this.level];
             current_angle = Robot.wristSubsystem.getWristPosition();
             // Calculate power curve proportional
-            double armRotationPower = Math.abs(this.targetAlgaeIntakeAngle - current_angle) / 300;
+            double armRotationPower = Math.abs(this.targetAngle - current_angle) / 300 + 0.15;
             // Move arm up or down to target arm angle
-            if (
-                Math.abs(this.targetAlgaeIntakeAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance
-            ) {
-                double v_sign = Math.signum(this.targetAlgaeIntakeAngle - current_angle);
+            if (Math.abs(this.targetAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance) {
+                double v_sign = Math.signum(this.targetAngle - current_angle);
                 Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
             } else {
+                Robot.wristSubsystem.stopWrist();
                 isAtAngle = true;
             }
             // set height to correct
@@ -74,7 +74,6 @@ public class IntakeAlgaeReef extends Command {
                 Robot.gamePieceManipulator.intakeAlgae();
             } else {
                 Robot.gamePieceManipulator.stopGamePieceMotor();
-                isAlgaeLoaded = true;
             }
         }
     }
@@ -84,7 +83,7 @@ public class IntakeAlgaeReef extends Command {
     public void end(boolean interrupted) {
         // timer.stop();
         Robot.wristSubsystem.stopWrist();
-        Robot.gamePieceManipulator.stopAlgaeMotor();
+        Robot.gamePieceManipulator.stopGamePieceMotor();
         Robot.elevatorSubsystem.stopElevator();
         isDone = true;
     }

@@ -61,7 +61,7 @@ public final class Constants {
 
     public static class Limits {
 
-        public static final double elevatorMax = 52.625; // encoder count 9500;
+        public static final double elevatorMax = 52.9; // encoder count 9500;
         public static final double elevatorMin = 0.25; // encoder count 0;
         public static final double wristMinAngle = -178;
         public static final double wristMaxAngle = -1;
@@ -81,29 +81,34 @@ public final class Constants {
         public static final double[] coralLevels = {
             0, // we ignore this level, leave at 0
             0, // height in inches of level 1 of the reef
-            5, // level 2
-            15.5, // level 3
+            5.2, // level 2
+            15.7, // level 3
             36 // level 4
         };
         // elevator to intake height
-        public static final double targetCoralIntakeHeight = 5.9;
+        public static final double targetCoralIntakeHeight = 4.9;
         public static final double[] algaeLevels = {
             0, // we ignore this level, leave at 0
-            0, // level LOW
+            3.1, // level LOW
             9.8, // level 2
             20.6 // level 3
         };
         // optimal angle in degrees to eject coral onto level 1
         public static final double coralEjectAngleLevel1 = 0; // nearly horizontal
-        public static final double coralEjectAngleLevel23 = 0;
+        public static final double coralEjectAngleLevel23 = -8.5;
         public static final double coralEjectAngleLevel4 = -46; // vertical
         // optimal angle in degrees for ejecting algae into the processor
         public static final double targetAlgaeEjectBargeAngle = -20;
         public static final double targetAlgaeEjectProcessorAngle = -20;
         public static final double targetCoralIntakeAngle = -95;
-        public static final double targetAlgaeIntakeReefAngle = -134;
-        public static final double targetAlgaeIntakeGroundAngle = -134;
-        public static final double travelAngle = -55;
+        public static final double travelAlgaeAngle = -55;
+        public static final double travelCoralIntakeAngle = -40;
+        public static final double[] algaeAngles = {
+            0,
+            -185, // Ground Level Pickup
+            -134, // Reef Pickup Level 2
+            -134 // Reef Pickup Level 3
+        };
     }
 
     public static final class Tolerances {
@@ -115,7 +120,7 @@ public final class Constants {
         public static final double algaeEjectAngleTolerance = 2.0;
         public static final double algaeIntakeAngleTolerance = 2.0;
         public static final double minElevatorHeightTolerance = 1.0;
-        public static final double travelPositionAngleTolerance = 1.0;
+        public static final double travelPositionAngleTolerance = 2.0;
     }
 
     public static final class MotorSpeeds {
@@ -125,7 +130,7 @@ public final class Constants {
         public static final double wristPower = 0.25;
         public static final double coralEjectMotorSpeed = 0.2;
         public static final double coralIntakeMotorSpeed = 0.2;
-        public static final double coralManualEjectMotorSpeed = -0.2;
+        public static final double coralManualEjectMotorSpeed = 0.2;
         public static final double coralManualIntakeMotorSpeed = 0.2;
         public static final double algaeEjectMotorSpeed = 0.5;
         public static final double algaeIntakeMotorSpeed = -0.5;

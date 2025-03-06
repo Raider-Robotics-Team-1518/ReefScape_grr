@@ -11,7 +11,7 @@ import org.team1518.robot.Robot;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class IntakeCoral extends Command {
 
-    //private Timer timer;
+    // private Timer timer;
     private boolean isDone = false;
     private boolean isAtAngle = false;
     private boolean isCoralLoaded = false;
@@ -40,32 +40,36 @@ public class IntakeCoral extends Command {
         if (isAtAngle && isCoralLoaded && isAtHeight) {
             isDone = true;
         } else {
-            // set arm to correct angle
-            current_angle = Robot.wristSubsystem.getWristPosition();
-            // Calculate power curve proportional
-            double armRotationPower = Math.abs(this.targetIntakeAngle - current_angle) / 100;
-            // Move arm up or down to target arm angle
-            if (Math.abs(this.targetIntakeAngle - current_angle) > Constants.Tolerances.coralIntakeAngleTolerance) {
-                double v_sign = Math.signum(this.targetIntakeAngle - current_angle);
-                Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
+            if (!isCoralLoaded) {
+                // set arm to correct angle
+                current_angle = Robot.wristSubsystem.getWristPosition();
+                // Calculate power curve proportional
+                double armRotationPower = Math.abs(this.targetIntakeAngle - current_angle) / 100;
+                // Move arm up or down to target arm angle
+                if (Math.abs(this.targetIntakeAngle - current_angle) > Constants.Tolerances.coralIntakeAngleTolerance) {
+                    double v_sign = Math.signum(this.targetIntakeAngle - current_angle);
+                    Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
+                } else {
+                    isAtAngle = true;
+                }
+                // set height to correct
+                current_height = Robot.elevatorSubsystem.getCurrentHeight();
+                // Move elevator up or down to target height
+                if (Math.abs(targetIntakeHeight - current_height) > Constants.Tolerances.reefCoralHeightTolerance) {
+                    double v_sign = Math.signum(targetIntakeHeight - current_height);
+                    Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
+                } else {
+                    Robot.elevatorSubsystem.stopElevator();
+                    isAtHeight = true;
+                }
+                if (!Robot.gamePieceManipulator.isCoralLoaded()) {
+                    Robot.gamePieceManipulator.intakeCoral();
+                } else {
+                    Robot.gamePieceManipulator.stopGamePieceMotor();
+                    isCoralLoaded = true;
+                }
             } else {
-                isAtAngle = true;
-            }
-            // set height to correct
-            current_height = Robot.elevatorSubsystem.getCurrentHeight();
-            // Move elevator up or down to target height
-            if (Math.abs(targetIntakeHeight - current_height) > Constants.Tolerances.reefCoralHeightTolerance) {
-                double v_sign = Math.signum(targetIntakeHeight - current_height);
-                Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
-            } else {
-                Robot.elevatorSubsystem.stopElevator();
-                isAtHeight = true;
-            }
-            if (!Robot.gamePieceManipulator.isCoralLoaded()) {
-                Robot.gamePieceManipulator.intakeCoral();
-            } else {
-                Robot.gamePieceManipulator.stopGamePieceMotor();
-                isCoralLoaded = true;
+                isDone = true;
             }
         }
     }
@@ -73,7 +77,7 @@ public class IntakeCoral extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        //timer.stop();
+        // timer.stop();
         Robot.wristSubsystem.stopWrist();
         Robot.gamePieceManipulator.stopCoralMotor();
         Robot.elevatorSubsystem.stopElevator();

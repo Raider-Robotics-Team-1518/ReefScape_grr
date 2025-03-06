@@ -37,15 +37,15 @@ public class MoveToBarge extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        isAlgaeLoaded = Robot.gamePieceManipulator.isAlgaeLoaded();
-        if (isAlgaeLoaded) {
+        //isAlgaeLoaded = Robot.gamePieceManipulator.isAlgaeLoaded();
+        if (Robot.gamePieceManipulator.isAlgaeLoaded()) {
             if (!isAtHeight) {
                 // set height to correct
                 current_height = Robot.elevatorSubsystem.getCurrentHeight();
                 // Move elevator up or down to target height
                 if (
                     Math.abs(Constants.Limits.elevatorMax - current_height) >
-                    Constants.Tolerances.reefCoralHeightTolerance
+                    Constants.Tolerances.reefAlgaeHeightTolerance
                 ) {
                     double v_sign = Math.signum(Constants.Limits.elevatorMax - current_height);
                     Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
@@ -57,15 +57,17 @@ public class MoveToBarge extends Command {
                 // set arm to correct angle
                 current_angle = Robot.wristSubsystem.getWristPosition();
                 // Calculate power curve proportional
-                double armRotationPower = Math.abs(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle) / 300;
+                double armRotationPower =
+                    Math.abs(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle) / 300 + 0.15;
                 // Move arm up or down to target arm angle
                 if (
                     Math.abs(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle) >
-                    Constants.Tolerances.coralIntakeAngleTolerance
+                    Constants.Tolerances.algaeIntakeAngleTolerance
                 ) {
                     double v_sign = Math.signum(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle);
                     Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
                 } else {
+                    Robot.wristSubsystem.stopWrist();
                     isDone = true;
                 }
             }

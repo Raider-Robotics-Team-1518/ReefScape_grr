@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import org.team1518.lib.util.GRRDashboard;
 import org.team1518.lib.util.Profiler;
@@ -30,7 +31,8 @@ import org.team1518.robot.commands.gamepiecemanipulator.ManualWrist;
 import org.team1518.robot.commands.gamepiecemanipulator.MoveToBarge;
 import org.team1518.robot.commands.gamepiecemanipulator.MoveToEjectCoralAngle;
 import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
-import org.team1518.robot.commands.gamepiecemanipulator.SetTravelPosition;
+import org.team1518.robot.commands.gamepiecemanipulator.SetIntakeCoralTravelPosition;
+import org.team1518.robot.commands.gamepiecemanipulator.SetAlgaeTravelPosition;
 import org.team1518.robot.subsystems.Blinkies;
 import org.team1518.robot.subsystems.ElevatorSubsystem;
 import org.team1518.robot.subsystems.GamePieceManipulator;
@@ -55,6 +57,7 @@ public final class Robot extends TimedRobot {
     private final Joystick driver;
     private final CommandXboxController coDriver;
     private final CommandGenericHID buttonBox;
+    private final JoystickButton swerveTare;
 
     public Robot() {
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -87,6 +90,7 @@ public final class Robot extends TimedRobot {
         driver = new Joystick(Constants.kDriver);
         coDriver = new CommandXboxController(Constants.kCoDriver);
         buttonBox = new CommandGenericHID(Constants.kButtonBox);
+        swerveTare = new JoystickButton(driver, 15);
 
         // Set default commands
         swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.75));
@@ -95,34 +99,39 @@ public final class Robot extends TimedRobot {
         RobotModeTriggers.autonomous().whileTrue(GRRDashboard.runSelectedAuto());
 
         // Driver bindings
-        // driver.povLeft().onTrue(swerve.tareRotation());
+        swerveTare.onTrue(swerve.tareRotation()); 
 
-        // Co-driver bindings
+        // Co-driver bindings for manual operations
         coDriver.y().whileTrue(new ManualWrist(0.25)); // .onFalse(new ManualWrist(0));
         coDriver.a().whileTrue(new ManualWrist(-0.25)); // .onFalse(new ManualWrist(0));
         coDriver.povUp().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPower));
         coDriver.povDown().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPowerDn));
-        coDriver.rightTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualEjectMotorSpeed)); // Eject coral and algae
-        coDriver.leftTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualIntakeMotorSpeed)); // .onFalse(new
-        // ManualAlgaeIntake(0));
-        coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed)); // .onFalse(new
-        // ManualCoralIntake(0));
-        buttonBox.button(10).onTrue(new IntakeCoral().andThen(new SetTravelPosition()));
-        buttonBox.button(9).onTrue(new SetTravelPosition().andThen(new MoveToBarge()));
-        buttonBox.button(6).onTrue(new IntakeAlgaeReef(2)/* .andThen(new SetTravelPosition()) */);
-        buttonBox.button(7).onTrue(new IntakeAlgaeReef(3)/* .andThen(new SetTravelPosition()) */);
+        coDriver.rightTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualEjectMotorSpeed));
+        coDriver.leftTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualIntakeMotorSpeed));
+        coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed));
+
+        // Algae Intake Options
+        buttonBox.button(5).onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(1)));
+        buttonBox.button(6).onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(2)));
+        buttonBox.button(7).onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(3)));
+        // Algae Deposit on Barge
+        buttonBox.button(9).onTrue(new SetAlgaeTravelPosition().andThen(new MoveToBarge()));
+
+        // Intake Coral from Feeder
+        buttonBox.button(10).onTrue(new IntakeCoral().andThen(new SetIntakeCoralTravelPosition()));
+        // Coral Deposit on Reef Options
         buttonBox
             .button(4)
-            .onTrue(new SetTravelPosition().andThen(new RaiseLift(1)).andThen(new MoveToEjectCoralAngle(1)));
+            .onTrue(new SetIntakeCoralTravelPosition().andThen(new RaiseLift(1)).andThen(new MoveToEjectCoralAngle(1)));
         buttonBox
             .button(3)
-            .onTrue(new SetTravelPosition().andThen(new RaiseLift(2)).andThen(new MoveToEjectCoralAngle(2)));
+            .onTrue(new SetIntakeCoralTravelPosition().andThen(new RaiseLift(2)).andThen(new MoveToEjectCoralAngle(2)));
         buttonBox
             .button(2)
-            .onTrue(new SetTravelPosition().andThen(new RaiseLift(3)).andThen(new MoveToEjectCoralAngle(3)));
+            .onTrue(new SetIntakeCoralTravelPosition().andThen(new RaiseLift(3)).andThen(new MoveToEjectCoralAngle(3)));
         buttonBox
             .button(1)
-            .onTrue(new SetTravelPosition().andThen(new RaiseLift(4)).andThen(new MoveToEjectCoralAngle(4)));
+            .onTrue(new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)).andThen(new MoveToEjectCoralAngle(4)));
     }
 
     @Override

@@ -9,41 +9,51 @@ import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SetTravelPosition extends Command {
+public class SetIntakeCoralTravelPosition extends Command {
 
     private boolean isDone = false;
     private boolean isAtAngle = false;
     private double current_angle = 0;
 
     /** Creates a new SetTravelPosition. */
-    public SetTravelPosition() {
+    public SetIntakeCoralTravelPosition() {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.elevatorSubsystem, Robot.wristSubsystem);
     }
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        isDone = false;
+        isAtAngle = false;
+        current_angle = 0;
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         current_angle = Robot.wristSubsystem.getWristPosition();
-        if (Math.abs(Constants.Reef.travelAngle - current_angle) <= Constants.Tolerances.travelPositionAngleTolerance) {
+        if (
+            Math.abs(Constants.Reef.travelCoralIntakeAngle - current_angle) <=
+            Constants.Tolerances.travelPositionAngleTolerance
+        ) {
+            Robot.wristSubsystem.stopWrist();
             isDone = true;
         } else {
             // set arm to correct angle
             // Calculate power curve proportional
-            double armRotationPower = Math.abs(Constants.Reef.travelAngle - current_angle) / 50;
+            double armRotationPower = Math.abs(Constants.Reef.travelCoralIntakeAngle - current_angle) / 200 + 0.2;
             // Move arm up or down to target arm angle
-            double v_sign = Math.signum(Constants.Reef.travelAngle - current_angle);
+            double v_sign = Math.signum(Constants.Reef.travelCoralIntakeAngle - current_angle);
             Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
-    public void end(boolean interrupted) {}
+    public void end(boolean interrupted) {
+        Robot.wristSubsystem.stopWrist();
+    }
 
     // Returns true when the command should end.
     @Override

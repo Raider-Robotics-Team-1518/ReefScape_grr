@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1518.robot.Constants;
+import org.team1518.robot.Robot;
 
 public class GamePieceManipulator extends SubsystemBase {
 
@@ -43,32 +44,24 @@ public class GamePieceManipulator extends SubsystemBase {
         return algaeIsLoaded;
     }
 
+    public boolean isAtDistance() {
+        return (Robot.distanceSensor.getRange() < 8) && (Robot.distanceSensor.isRangeValid());
+    }
+
     public void intakeCoral() {
         gamePieceMotor.set(Constants.MotorSpeeds.coralIntakeMotorSpeed);
     }
 
     public void ejectCoral() {
-        // if (isCoralLoaded()) {
         gamePieceMotor.set(Constants.MotorSpeeds.coralEjectMotorSpeed);
-        // } else {
-        //     stopGamePieceMotor();
-        // }
     }
 
     public void intakeAlgae() {
-        if (!isAlgaeLoaded()) {
-            gamePieceMotor.set(Constants.MotorSpeeds.algaeIntakeMotorSpeed);
-        } else {
-            stopAlgaeMotor();
-        }
+        gamePieceMotor.set(Constants.MotorSpeeds.algaeIntakeMotorSpeed);
     }
 
     public void ejectAlgae() {
-        if (isAlgaeLoaded()) {
-            gamePieceMotor.set(Constants.MotorSpeeds.algaeEjectMotorSpeed);
-        } else {
-            stopAlgaeMotor();
-        }
+        gamePieceMotor.set(Constants.MotorSpeeds.algaeEjectMotorSpeed);
     }
 
     public void runIntake(double speed) {
@@ -92,5 +85,6 @@ public class GamePieceManipulator extends SubsystemBase {
         // This method will be called once per scheduler run
         SmartDashboard.putBoolean("Is Coral Loaded", isCoralLoaded());
         SmartDashboard.putBoolean("Is Algae Loaded", isAlgaeLoaded());
+        SmartDashboard.putBoolean("Is Witihin Range", isAtDistance());
     }
 }
