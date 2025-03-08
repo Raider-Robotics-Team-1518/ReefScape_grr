@@ -25,7 +25,7 @@ public class IntakeAlgaeReef extends Command {
     public IntakeAlgaeReef(int level) {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(Robot.wristSubsystem, Robot.elevatorSubsystem, Robot.gamePieceManipulator);
-        //this.targetAlgaeIntakeAngle = targetAlgaeIntakeAngle;
+        // this.targetAlgaeIntakeAngle = targetAlgaeIntakeAngle;
         // level will be one of LOW, 2, 3
         this.level = level;
     }
@@ -46,34 +46,39 @@ public class IntakeAlgaeReef extends Command {
         if (isAtAngle && isAtHeight && Robot.gamePieceManipulator.isAlgaeLoaded()) {
             isDone = true;
         } else {
-            // set arm to correct angle
-            targetAngle = Constants.Reef.algaeAngles[this.level];
-            current_angle = Robot.wristSubsystem.getWristPosition();
-            // Calculate power curve proportional
-            double armRotationPower = Math.abs(this.targetAngle - current_angle) / 300 + 0.15;
-            // Move arm up or down to target arm angle
-            if (Math.abs(this.targetAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance) {
-                double v_sign = Math.signum(this.targetAngle - current_angle);
-                Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
+            if (!isAlgaeLoaded) {
+                // set arm to correct angle
+                targetAngle = Constants.Reef.algaeAngles[this.level];
+                current_angle = Robot.wristSubsystem.getWristPosition();
+                // Calculate power curve proportional
+                double armRotationPower = Math.abs(this.targetAngle - current_angle) / 200 + 0.2;
+                // Move arm up or down to target arm angle
+                if (Math.abs(this.targetAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance) {
+                    double v_sign = Math.signum(this.targetAngle - current_angle);
+                    Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
+                } else {
+                    Robot.wristSubsystem.stopWrist();
+                    isAtAngle = true;
+                }
+                // set height to correct
+                current_height = Robot.elevatorSubsystem.getCurrentHeight();
+                targetHeight = Constants.Reef.algaeLevels[this.level];
+                // Move elevator up or down to target height
+                if (Math.abs(targetHeight - current_height) > Constants.Tolerances.reefAlgaeHeightTolerance) {
+                    double v_sign = Math.signum(targetHeight - current_height);
+                    Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
+                } else {
+                    Robot.elevatorSubsystem.stopElevator();
+                    isAtHeight = true;
+                }
+                if (!Robot.gamePieceManipulator.isAlgaeLoaded()) {
+                    Robot.gamePieceManipulator.intakeAlgae();
+                } else {
+                    Robot.gamePieceManipulator.stopGamePieceMotor();
+                    isAlgaeLoaded = true;
+                }
             } else {
-                Robot.wristSubsystem.stopWrist();
-                isAtAngle = true;
-            }
-            // set height to correct
-            current_height = Robot.elevatorSubsystem.getCurrentHeight();
-            targetHeight = Constants.Reef.algaeLevels[this.level];
-            // Move elevator up or down to target height
-            if (Math.abs(targetHeight - current_height) > Constants.Tolerances.reefAlgaeHeightTolerance) {
-                double v_sign = Math.signum(targetHeight - current_height);
-                Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
-            } else {
-                Robot.elevatorSubsystem.stopElevator();
-                isAtHeight = true;
-            }
-            if (!Robot.gamePieceManipulator.isAlgaeLoaded()) {
-                Robot.gamePieceManipulator.intakeAlgae();
-            } else {
-                Robot.gamePieceManipulator.stopGamePieceMotor();
+                isDone = true;
             }
         }
     }

@@ -33,7 +33,10 @@ public class SetAlgaeTravelPosition extends Command {
     @Override
     public void execute() {
         current_angle = Robot.wristSubsystem.getWristPosition();
-        if (Math.abs(Constants.Reef.travelAlgaeAngle - current_angle) <= Constants.Tolerances.travelPositionAngleTolerance) {
+        if (
+            Math.abs(Constants.Reef.travelAlgaeAngle - current_angle) <=
+            Constants.Tolerances.travelPositionAngleTolerance
+        ) {
             Robot.wristSubsystem.stopWrist();
             isDone = true;
         } else {

@@ -30,9 +30,10 @@ import org.team1518.robot.commands.gamepiecemanipulator.ManualLift;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualWrist;
 import org.team1518.robot.commands.gamepiecemanipulator.MoveToBarge;
 import org.team1518.robot.commands.gamepiecemanipulator.MoveToEjectCoralAngle;
+import org.team1518.robot.commands.gamepiecemanipulator.MoveToProcessor;
 import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
-import org.team1518.robot.commands.gamepiecemanipulator.SetIntakeCoralTravelPosition;
 import org.team1518.robot.commands.gamepiecemanipulator.SetAlgaeTravelPosition;
+import org.team1518.robot.commands.gamepiecemanipulator.SetIntakeCoralTravelPosition;
 import org.team1518.robot.subsystems.Blinkies;
 import org.team1518.robot.subsystems.ElevatorSubsystem;
 import org.team1518.robot.subsystems.GamePieceManipulator;
@@ -99,7 +100,7 @@ public final class Robot extends TimedRobot {
         RobotModeTriggers.autonomous().whileTrue(GRRDashboard.runSelectedAuto());
 
         // Driver bindings
-        swerveTare.onTrue(swerve.tareRotation()); 
+        swerveTare.onTrue(swerve.tareRotation());
 
         // Co-driver bindings for manual operations
         coDriver.y().whileTrue(new ManualWrist(0.25)); // .onFalse(new ManualWrist(0));
@@ -111,11 +112,18 @@ public final class Robot extends TimedRobot {
         coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed));
 
         // Algae Intake Options
-        buttonBox.button(5).onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(1)));
-        buttonBox.button(6).onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(2)));
-        buttonBox.button(7).onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(3)));
+        buttonBox
+            .button(5)
+            .onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(1)).andThen(new SetAlgaeTravelPosition()));
+        buttonBox
+            .button(6)
+            .onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(2)).andThen(new SetAlgaeTravelPosition()));
+        buttonBox
+            .button(7)
+            .onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(3)).andThen(new SetAlgaeTravelPosition()));
         // Algae Deposit on Barge
         buttonBox.button(9).onTrue(new SetAlgaeTravelPosition().andThen(new MoveToBarge()));
+        buttonBox.button(8).onTrue(new SetAlgaeTravelPosition().andThen(new MoveToProcessor()));
 
         // Intake Coral from Feeder
         buttonBox.button(10).onTrue(new IntakeCoral().andThen(new SetIntakeCoralTravelPosition()));

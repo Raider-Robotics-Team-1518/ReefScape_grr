@@ -13,7 +13,7 @@ import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class MoveToBarge extends Command {
+public class MoveToProcessor extends Command {
 
     // private Timer timer;
     private boolean isDone = false;
@@ -22,7 +22,7 @@ public class MoveToBarge extends Command {
     private double current_angle = 0;
     private double current_height = 0;
 
-    public MoveToBarge() {
+    public MoveToProcessor() {
         addRequirements(Robot.gamePieceManipulator, Robot.wristSubsystem, Robot.elevatorSubsystem);
     }
 
@@ -44,10 +44,10 @@ public class MoveToBarge extends Command {
                 current_height = Robot.elevatorSubsystem.getCurrentHeight();
                 // Move elevator up or down to target height
                 if (
-                    Math.abs(Constants.Limits.elevatorMax - current_height) >
+                    Math.abs(Constants.Reef.targetAlgaeEjectProcessorHeight - current_height) >
                     Constants.Tolerances.reefAlgaeHeightTolerance
                 ) {
-                    double v_sign = Math.signum(Constants.Limits.elevatorMax - current_height);
+                    double v_sign = Math.signum(Constants.Reef.targetAlgaeEjectProcessorHeight - current_height);
                     Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
                 } else {
                     Robot.elevatorSubsystem.stopElevator();
@@ -58,13 +58,13 @@ public class MoveToBarge extends Command {
                 current_angle = Robot.wristSubsystem.getWristPosition();
                 // Calculate power curve proportional
                 double armRotationPower =
-                    Math.abs(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle) / 200 + 0.2;
+                    Math.abs(Constants.Reef.targetAlgaeEjectProcessorAngle - current_angle) / 200 + 0.2;
                 // Move arm up or down to target arm angle
                 if (
-                    Math.abs(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle) >
+                    Math.abs(Constants.Reef.targetAlgaeEjectProcessorAngle - current_angle) >
                     Constants.Tolerances.algaeIntakeAngleTolerance
                 ) {
-                    double v_sign = Math.signum(Constants.Reef.targetAlgaeEjectBargeAngle - current_angle);
+                    double v_sign = Math.signum(Constants.Reef.targetAlgaeEjectProcessorAngle - current_angle);
                     Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));
                 } else {
                     Robot.wristSubsystem.stopWrist();

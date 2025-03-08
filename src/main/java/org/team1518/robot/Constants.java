@@ -98,17 +98,18 @@ public final class Constants {
         public static final double coralEjectAngleLevel23 = -8.5;
         public static final double coralEjectAngleLevel4 = -46; // vertical
         // optimal angle in degrees for ejecting algae into the processor
-        public static final double targetAlgaeEjectBargeAngle = -20;
-        public static final double targetAlgaeEjectProcessorAngle = -20;
         public static final double targetCoralIntakeAngle = -95;
         public static final double travelAlgaeAngle = -55;
-        public static final double travelCoralIntakeAngle = -40;
+        public static final double travelCoralIntakeAngle = -57;
         public static final double[] algaeAngles = {
             0,
             -185, // Ground Level Pickup
             -134, // Reef Pickup Level 2
             -134 // Reef Pickup Level 3
         };
+        public static final double targetAlgaeEjectBargeAngle = -20;
+        public static final double targetAlgaeEjectProcessorHeight = 3.1;
+        public static final double targetAlgaeEjectProcessorAngle = -185;
     }
 
     public static final class Tolerances {

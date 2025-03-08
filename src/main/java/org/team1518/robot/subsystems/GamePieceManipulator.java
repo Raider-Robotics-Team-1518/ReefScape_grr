@@ -45,7 +45,7 @@ public class GamePieceManipulator extends SubsystemBase {
     }
 
     public boolean isAtDistance() {
-        return (Robot.distanceSensor.getRange() < 8) && (Robot.distanceSensor.isRangeValid());
+        return (Robot.distanceSensor.isRangeValid() && (Robot.distanceSensor.getRange() < 8));
     }
 
     public void intakeCoral() {
@@ -85,6 +85,6 @@ public class GamePieceManipulator extends SubsystemBase {
         // This method will be called once per scheduler run
         SmartDashboard.putBoolean("Is Coral Loaded", isCoralLoaded());
         SmartDashboard.putBoolean("Is Algae Loaded", isAlgaeLoaded());
-        SmartDashboard.putBoolean("Is Witihin Range", isAtDistance());
+        SmartDashboard.putBoolean("Is Within Range", isAtDistance());
     }
 }
