@@ -31,6 +31,7 @@ import org.team1518.lib.util.Math2;
 import org.team1518.lib.util.Mutable;
 import org.team1518.lib.util.vendors.PhoenixUtil;
 import org.team1518.lib.util.vendors.ReduxUtil;
+import org.team1518.robot.Robot;
 
 /**
  * Contains implementations for IMUs to be used with the {@link SwerveAPI}.
@@ -168,7 +169,11 @@ public final class SwerveIMUs {
 
                 @Override
                 public Rotation2d getYaw() {
-                    return Rotation2d.fromDegrees(-navx.getYaw());
+                    if (Robot.invertedIMU) {
+                        return Rotation2d.fromDegrees(-navx.getYaw());
+                    } else {
+                        return Rotation2d.fromDegrees(navx.getYaw());
+                    }
                 }
 
                 @Override

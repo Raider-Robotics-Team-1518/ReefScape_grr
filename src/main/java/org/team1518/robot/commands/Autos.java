@@ -34,6 +34,8 @@ public final class Autos {
         // Add autonomous modes to the dashboard
         GRRDashboard.setTrajectoryCache(factory.cache());
         GRRDashboard.addAuto("Example", "example", example());
+        GRRDashboard.addAuto("Drive Out 1", "Drive_Out_Only_1", driveOutOnly1());
+        GRRDashboard.addAuto("Drive Out 2", "Drive_Out_Only_2", driveOutOnly2());
     }
 
     private Command example() {
@@ -42,6 +44,26 @@ public final class Autos {
 
         routine.active().onTrue(sequence(exampleTraj.resetOdometry(), exampleTraj.cmd()));
         exampleTraj.done().onTrue(sequence(routines.example(), swerve.finishAuto()));
+
+        return routine.cmd();
+    }
+
+    private Command driveOutOnly1() {
+        AutoRoutine routine = factory.newRoutine("driveOut1");
+        AutoTrajectory driveOut1 = routine.trajectory("Drive_Out_Only_1");
+
+        routine.active().onTrue(sequence(driveOut1.resetOdometry(), driveOut1.cmd()));
+        driveOut1.done().onTrue(sequence(routines.driveOutOnly1(), swerve.finishAuto()));
+
+        return routine.cmd();
+    }
+
+    private Command driveOutOnly2() {
+        AutoRoutine routine = factory.newRoutine("driveOut2");
+        AutoTrajectory driveOut2 = routine.trajectory("Drive_Out_Only_2");
+
+        routine.active().onTrue(sequence(driveOut2.resetOdometry(), driveOut2.cmd()));
+        driveOut2.done().onTrue(sequence(routines.driveOutOnly2(), swerve.finishAuto()));
 
         return routine.cmd();
     }

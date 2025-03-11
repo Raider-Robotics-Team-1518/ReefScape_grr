@@ -5,6 +5,8 @@
 package org.team1518.robot.subsystems;
 
 import com.revrobotics.ColorSensorV3;
+import com.revrobotics.Rev2mDistanceSensor;
+import com.revrobotics.Rev2mDistanceSensor.Port;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
@@ -14,7 +16,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1518.robot.Constants;
-import org.team1518.robot.Robot;
 
 public class GamePieceManipulator extends SubsystemBase {
 
@@ -24,12 +25,15 @@ public class GamePieceManipulator extends SubsystemBase {
     private final ColorSensorV3 m_algaeColorSensor = new ColorSensorV3(mxpI2cPort);
     private SparkMax gamePieceMotor = new SparkMax(Constants.Motors.gamePieceMotorId, MotorType.kBrushless);
     private SparkBaseConfig gamePieceMotorConfig;
+    private final Rev2mDistanceSensor distanceSensor;
 
     public GamePieceManipulator() {
         gamePieceMotorConfig = new SparkMaxConfig();
         gamePieceMotorConfig.idleMode(IdleMode.kBrake);
         gamePieceMotorConfig.inverted(true);
         gamePieceMotor.configure(gamePieceMotorConfig, null, null);
+        distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
+        distanceSensor.setAutomaticMode(true);
     }
 
     public boolean isCoralLoaded() {
@@ -45,7 +49,7 @@ public class GamePieceManipulator extends SubsystemBase {
     }
 
     public boolean isAtDistance() {
-        return (Robot.distanceSensor.isRangeValid() && (Robot.distanceSensor.getRange() < 8));
+        return (distanceSensor.isRangeValid() && (distanceSensor.getRange() < 8));
     }
 
     public void intakeCoral() {
@@ -80,11 +84,24 @@ public class GamePieceManipulator extends SubsystemBase {
         gamePieceMotor.set(0);
     }
 
+    public boolean isDistanceValid() {
+        return distanceSensor.isRangeValid();
+    }
+
+    public double getDistanceToObject() {
+        return distanceSensor.GetRange();
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
         SmartDashboard.putBoolean("Is Coral Loaded", isCoralLoaded());
         SmartDashboard.putBoolean("Is Algae Loaded", isAlgaeLoaded());
         SmartDashboard.putBoolean("Is Within Range", isAtDistance());
+        if (isDistanceValid()) {
+            SmartDashboard.putNumber("Raw distance", distanceSensor.getRange());
+        }
+        SmartDashboard.putBoolean("Algae Sensor", m_algaeColorSensor.isConnected());
+        SmartDashboard.putBoolean("Coral Sensor", m_coralColorSensor.isConnected());
     }
 }

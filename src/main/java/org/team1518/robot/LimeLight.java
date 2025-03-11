@@ -85,8 +85,8 @@ public class LimeLight {
      * @return double (inches)
      */
     public double getDistanceToTarget() {
-        if (Robot.distanceSensor.isRangeValid()) {
-            return Robot.distanceSensor.getRange();
+        if (Robot.gamePieceManipulator.isDistanceValid()) {
+            return Robot.gamePieceManipulator.getDistanceToObject();
         }
         return 0;
     }

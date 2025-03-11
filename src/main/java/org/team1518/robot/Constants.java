@@ -104,8 +104,8 @@ public final class Constants {
         public static final double[] algaeAngles = {
             0,
             -185, // Ground Level Pickup
-            -134, // Reef Pickup Level 2
-            -134 // Reef Pickup Level 3
+            -135, // Reef Pickup Level 2
+            -135 // Reef Pickup Level 3
         };
         public static final double targetAlgaeEjectBargeAngle = -20;
         public static final double targetAlgaeEjectProcessorHeight = 3.1;

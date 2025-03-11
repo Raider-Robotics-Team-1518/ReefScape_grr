@@ -27,4 +27,18 @@ public final class Routines {
     public Command example() {
         return sequence(print("Hello!"), swerve.stop(true).withTimeout(1.0)).withName("Routines.example()");
     }
+
+    public Command driveOutOnly1() {
+        return sequence(
+            print("Drive Out Only 1"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutOnly1()")
+        );
+    }
+
+    public Command driveOutOnly2() {
+        return sequence(
+            print("Drive Out Only 2"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutOnly2()")
+        );
+    }
 }

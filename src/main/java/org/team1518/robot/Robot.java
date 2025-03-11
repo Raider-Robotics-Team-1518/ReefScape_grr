@@ -3,8 +3,6 @@ package org.team1518.robot;
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 
 import com.ctre.phoenix6.SignalLogger;
-import com.revrobotics.Rev2mDistanceSensor;
-import com.revrobotics.Rev2mDistanceSensor.Port;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DataLogManager;
@@ -44,13 +42,12 @@ import org.team1518.robot.subsystems.WristSubsystem;
 public final class Robot extends TimedRobot {
 
     public final Swerve swerve;
+    public static boolean invertedIMU = false; // Default is true for teleop
     public static WristSubsystem wristSubsystem;
     public static ElevatorSubsystem elevatorSubsystem;
     public static GamePieceManipulator gamePieceManipulator;
     public static Blinkies m_blinkies;
     public static LimeLight limeLight;
-
-    public static Rev2mDistanceSensor distanceSensor;
 
     public final Routines routines;
     public final Autos autos;
@@ -79,8 +76,6 @@ public final class Robot extends TimedRobot {
         // Initialize compositions
         routines = new Routines(this);
         autos = new Autos(this);
-
-        distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
 
         elevatorSubsystem = new ElevatorSubsystem();
         wristSubsystem = new WristSubsystem();
@@ -147,7 +142,7 @@ public final class Robot extends TimedRobot {
         // Before measurements can be read from the sensor, this must be called
         // to start a background thread that will periodically poll all
         // enabled sensors and store their measured range.
-        distanceSensor.setAutomaticMode(true);
+        invertedIMU = true;
     }
 
     @Override
@@ -172,9 +167,6 @@ public final class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         SmartDashboard.putNumber("Distance", limeLight.getDistanceToTarget());
-        if (Robot.distanceSensor.isRangeValid()) {
-            SmartDashboard.putNumber("Raw distance", Robot.distanceSensor.getRange());
-        }
     }
 
     @Override
