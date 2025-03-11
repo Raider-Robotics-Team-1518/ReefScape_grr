@@ -7,8 +7,9 @@ import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.epilogue.Logged.Strategy;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import org.team1518.lib.util.GRRDashboard;
 import org.team1518.robot.Robot;
 import org.team1518.robot.subsystems.Swerve;
 
@@ -23,6 +24,7 @@ public final class Autos {
     private final Routines routines;
 
     private final AutoFactory factory;
+    private final SendableChooser<Command> autoChooser = new SendableChooser<>();
 
     public Autos(Robot robot) {
         swerve = robot.swerve;
@@ -32,10 +34,18 @@ public final class Autos {
         factory = new AutoFactory(swerve::getPose, swerve::resetPose, swerve::followTrajectory, true, swerve);
 
         // Add autonomous modes to the dashboard
-        GRRDashboard.setTrajectoryCache(factory.cache());
+        autoChooser.addOption("Example", example());
+        autoChooser.addOption("Drive Out 1", driveOutOnly1());
+        SmartDashboard.putData("Select Auto", autoChooser);
+        /*GRRDashboard.setTrajectoryCache(factory.cache());
         GRRDashboard.addAuto("Example", "example", example());
-        GRRDashboard.addAuto("Drive Out 1", "Drive_Out_Only_1", driveOutOnly1());
-        GRRDashboard.addAuto("Drive Out 2", "Drive_Out_Only_2", driveOutOnly2());
+        GRRDashboard.addAuto("Drive Out 1", "Drive_Out_Only_1", driveOutOnly1());*/
+        //SmartDashboard.putData("Select Auto", GRRDashboard);
+        // GRRDashboard.addAuto("Drive Out 2", "Drive_Out_Only_2", driveOutOnly2());
+    }
+
+    public Command getAuto() {
+        return autoChooser.getSelected();
     }
 
     private Command example() {
@@ -54,16 +64,6 @@ public final class Autos {
 
         routine.active().onTrue(sequence(driveOut1.resetOdometry(), driveOut1.cmd()));
         driveOut1.done().onTrue(sequence(routines.driveOutOnly1(), swerve.finishAuto()));
-
-        return routine.cmd();
-    }
-
-    private Command driveOutOnly2() {
-        AutoRoutine routine = factory.newRoutine("driveOut2");
-        AutoTrajectory driveOut2 = routine.trajectory("Drive_Out_Only_2");
-
-        routine.active().onTrue(sequence(driveOut2.resetOdometry(), driveOut2.cmd()));
-        driveOut2.done().onTrue(sequence(routines.driveOutOnly2(), swerve.finishAuto()));
 
         return routine.cmd();
     }
