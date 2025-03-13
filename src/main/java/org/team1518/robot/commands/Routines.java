@@ -35,10 +35,10 @@ public final class Routines {
         );
     }
 
-    public Command driveOutOnly2() {
+    public Command driveOutAndRotate() {
         return sequence(
-            print("Drive Out Only 2"),
-            swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutOnly2()")
+            print("Drive Out and Rotate"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutAndRotate()")
         );
     }
 }

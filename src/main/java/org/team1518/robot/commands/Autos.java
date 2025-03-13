@@ -36,6 +36,8 @@ public final class Autos {
         // Add autonomous modes to the dashboard
         autoChooser.addOption("Example", example());
         autoChooser.addOption("Drive Out 1", driveOutOnly1());
+        autoChooser.addOption("Drive Out and Rotate", driveOutAndRotate());
+        autoChooser.addOption("Drive to Reef 1", driveToReef1());
         SmartDashboard.putData("Select Auto", autoChooser);
         /*GRRDashboard.setTrajectoryCache(factory.cache());
         GRRDashboard.addAuto("Example", "example", example());
@@ -64,6 +66,26 @@ public final class Autos {
 
         routine.active().onTrue(sequence(driveOut1.resetOdometry(), driveOut1.cmd()));
         driveOut1.done().onTrue(sequence(routines.driveOutOnly1(), swerve.finishAuto()));
+
+        return routine.cmd();
+    }
+
+    private Command driveOutAndRotate() {
+        AutoRoutine routine = factory.newRoutine("driveOutAndRotate");
+        AutoTrajectory driveOutAndRotate = routine.trajectory("Drive_Out_And_Rotate");
+
+        routine.active().onTrue(sequence(driveOutAndRotate.resetOdometry(), driveOutAndRotate.cmd()));
+        driveOutAndRotate.done().onTrue(sequence(routines.driveOutAndRotate(), swerve.finishAuto()));
+
+        return routine.cmd();
+    }
+
+    private Command driveToReef1() {
+        AutoRoutine routine = factory.newRoutine("driveToReef1");
+        AutoTrajectory driveToReef1 = routine.trajectory("Drive_To_Reef_(pos1)");
+
+        routine.active().onTrue(sequence(driveToReef1.resetOdometry(), driveToReef1.cmd()));
+        driveToReef1.done().onTrue(sequence(routines.driveToReef1(), swerve.finishAuto()));
 
         return routine.cmd();
     }

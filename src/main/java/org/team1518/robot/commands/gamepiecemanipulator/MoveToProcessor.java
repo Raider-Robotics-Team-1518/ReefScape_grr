@@ -39,6 +39,7 @@ public class MoveToProcessor extends Command {
     public void execute() {
         //isAlgaeLoaded = Robot.gamePieceManipulator.isAlgaeLoaded();
         if (Robot.gamePieceManipulator.isAlgaeLoaded()) {
+            Robot.gamePieceManipulator.runIntake(-0.2);
             if (!isAtHeight) {
                 // set height to correct
                 current_height = Robot.elevatorSubsystem.getCurrentHeight();
@@ -58,7 +59,7 @@ public class MoveToProcessor extends Command {
                 current_angle = Robot.wristSubsystem.getWristPosition();
                 // Calculate power curve proportional
                 double armRotationPower =
-                    Math.abs(Constants.Reef.targetAlgaeEjectProcessorAngle - current_angle) / 200 + 0.2;
+                    Math.abs(Constants.Reef.targetAlgaeEjectProcessorAngle - current_angle) / 300 + 0.2;
                 // Move arm up or down to target arm angle
                 if (
                     Math.abs(Constants.Reef.targetAlgaeEjectProcessorAngle - current_angle) >
@@ -83,6 +84,7 @@ public class MoveToProcessor extends Command {
         Robot.wristSubsystem.stopWrist();
         Robot.elevatorSubsystem.stopElevator();
         isDone = true;
+        Robot.gamePieceManipulator.stopAlgaeMotor();
     }
 
     // Returns true when the command should end.

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -90,7 +91,7 @@ public final class Robot extends TimedRobot {
         swerveTare = new JoystickButton(driver, 15);
 
         // Set default commands
-        swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.75));
+        swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.9));
 
         // Create triggers
         RobotModeTriggers.autonomous().whileTrue(GRRDashboard.runSelectedAuto());
@@ -106,20 +107,45 @@ public final class Robot extends TimedRobot {
         coDriver.rightTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualEjectMotorSpeed));
         coDriver.leftTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualIntakeMotorSpeed));
         coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed));
+        coDriver.rightBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.slowAlgaeManualIntakeMotorSpeed));
 
         // Algae Intake Options
         buttonBox
             .button(5)
-            .onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(1)).andThen(new SetAlgaeTravelPosition()));
+            .onTrue(
+                new SetAlgaeTravelPosition()
+                    .andThen(
+                        new IntakeAlgaeReef(1).andThen(
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                        )
+                    )
+                    .andThen(new SetAlgaeTravelPosition())
+            );
         buttonBox
             .button(6)
-            .onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(2)).andThen(new SetAlgaeTravelPosition()));
+            .onTrue(
+                new SetAlgaeTravelPosition()
+                    .andThen(
+                        new IntakeAlgaeReef(2).andThen(
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                        )
+                    )
+                //.andThen(new SetAlgaeTravelPosition())
+            );
         buttonBox
             .button(7)
-            .onTrue(new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(3)).andThen(new SetAlgaeTravelPosition()));
+            .onTrue(
+                new SetAlgaeTravelPosition()
+                    .andThen(
+                        new IntakeAlgaeReef(3).andThen(
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                        )
+                    )
+                //.andThen(new SetAlgaeTravelPosition())
+            );
         // Algae Deposit on Barge
         buttonBox.button(9).onTrue(new SetAlgaeTravelPosition().andThen(new MoveToBarge()));
-        buttonBox.button(8).onTrue(new SetAlgaeTravelPosition().andThen(new MoveToProcessor()));
+        buttonBox.button(8).onTrue(new SetAlgaeTravelPosition().andThen((new MoveToProcessor())));
 
         // Intake Coral from Feeder
         buttonBox.button(10).onTrue(new IntakeCoral().andThen(new SetIntakeCoralTravelPosition()));

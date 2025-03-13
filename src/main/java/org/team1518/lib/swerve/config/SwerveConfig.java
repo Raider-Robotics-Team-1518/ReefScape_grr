@@ -44,13 +44,13 @@ public class SwerveConfig {
     /** Exponential power to apply to driver velocity input. */
     public double driverVelExp = -1.0;
     /** Deadband to apply to driver velocity input. */
-    public double driverVelDeadband = -1.0;
+    public double driverVelDeadband = 0.1;
     /** The maximum angular velocity for driver input in radians/second. */
     public double driverAngularVel = -1.0;
     /** Exponential power to apply to driver angular velocity input. */
     public double driverAngularVelExp = -1.0;
     /** Deadband to apply to driver angular velocity input. */
-    public double driverAngularVelDeadband = -1.0;
+    public double driverAngularVelDeadband = 0.1;
     /** The robot's nominal voltage. Typically {@code 12.0}. */
     public double voltage = -1.0;
     /** The current limit in amps for move motors. */
@@ -306,3 +306,6 @@ public class SwerveConfig {
         }
     }
 }
+/*if (travisArbo) {
+    print ("was here");
+}*/

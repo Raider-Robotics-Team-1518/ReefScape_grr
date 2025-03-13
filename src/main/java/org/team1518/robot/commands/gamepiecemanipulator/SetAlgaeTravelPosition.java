@@ -42,7 +42,7 @@ public class SetAlgaeTravelPosition extends Command {
         } else {
             // set arm to correct angle
             // Calculate power curve proportional
-            double armRotationPower = Math.abs(Constants.Reef.travelAlgaeAngle - current_angle) / 200 + 0.2;
+            double armRotationPower = Math.abs(Constants.Reef.travelAlgaeAngle - current_angle) / 360 + 0.2;
             // Move arm up or down to target arm angle
             double v_sign = Math.signum(Constants.Reef.travelAlgaeAngle - current_angle);
             Robot.wristSubsystem.setWristSpeed(v_sign * (armRotationPower));

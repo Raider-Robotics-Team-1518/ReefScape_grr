@@ -90,7 +90,7 @@ public final class Constants {
         public static final double[] algaeLevels = {
             0, // we ignore this level, leave at 0
             3.1, // level LOW
-            9.8, // level 2
+            9.3, // level 2
             20.6 // level 3
         };
         // optimal angle in degrees to eject coral onto level 1
@@ -126,13 +126,14 @@ public final class Constants {
 
     public static final class MotorSpeeds {
 
-        public static final double elevatorPower = 0.9;
-        public static final double elevatorPowerDn = -0.75;
+        public static final double elevatorPower = 1.0;
+        public static final double elevatorPowerDn = -0.9000;
         public static final double wristPower = 0.25;
         public static final double coralEjectMotorSpeed = 0.2;
         public static final double coralIntakeMotorSpeed = 0.2;
         public static final double coralManualEjectMotorSpeed = 0.2;
         public static final double coralManualIntakeMotorSpeed = 0.2;
+        public static final double slowAlgaeManualIntakeMotorSpeed = -0.2;
         public static final double algaeEjectMotorSpeed = 0.5;
         public static final double algaeIntakeMotorSpeed = -0.5;
         public static final double algaeManualEjectMotorSpeed = 0.5;

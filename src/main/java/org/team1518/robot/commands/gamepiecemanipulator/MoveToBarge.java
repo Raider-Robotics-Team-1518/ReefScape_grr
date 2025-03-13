@@ -39,6 +39,7 @@ public class MoveToBarge extends Command {
     public void execute() {
         //isAlgaeLoaded = Robot.gamePieceManipulator.isAlgaeLoaded();
         if (Robot.gamePieceManipulator.isAlgaeLoaded()) {
+            Robot.gamePieceManipulator.runIntake(-0.2);
             if (!isAtHeight) {
                 // set height to correct
                 current_height = Robot.elevatorSubsystem.getCurrentHeight();
@@ -83,6 +84,7 @@ public class MoveToBarge extends Command {
         Robot.wristSubsystem.stopWrist();
         Robot.elevatorSubsystem.stopElevator();
         isDone = true;
+        Robot.gamePieceManipulator.stopAlgaeMotor();
     }
 
     // Returns true when the command should end.

@@ -17,35 +17,35 @@
  "config":{
   "frontLeft":{
    "x":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"15.5 in",
+    "val":0.3937
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"12.5 in",
+    "val":0.3175
    }
   },
   "backLeft":{
    "x":{
-    "exp":"-11 in",
-    "val":-0.2794
+    "exp":"-18.5 in",
+    "val":-0.4699
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"12.5 in",
+    "val":0.3175
    }
   },
   "mass":{
-   "exp":"100 lbs",
-   "val":45.359237
+   "exp":"105 lbs",
+   "val":47.62719885
   },
   "inertia":{
    "exp":"6 kg m ^ 2",
    "val":6.0
   },
   "gearing":{
-   "exp":"6.5",
-   "val":6.5
+   "exp":"8.14",
+   "val":8.14
   },
   "radius":{
    "exp":"2 in",
