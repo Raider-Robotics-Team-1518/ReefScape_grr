@@ -121,7 +121,7 @@ public final class Robot extends TimedRobot {
                 new SetAlgaeTravelPosition()
                     .andThen(
                         new IntakeAlgaeReef(1).andThen(
-                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.25)) //
                         )
                     )
                     .andThen(new SetAlgaeTravelPosition())
@@ -132,7 +132,7 @@ public final class Robot extends TimedRobot {
                 new SetAlgaeTravelPosition()
                     .andThen(
                         new IntakeAlgaeReef(2).andThen(
-                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.25)) //
                         )
                     )
                     .andThen(new SetAlgaeTravelPosition())
@@ -143,7 +143,7 @@ public final class Robot extends TimedRobot {
                 new SetAlgaeTravelPosition()
                     .andThen(
                         new IntakeAlgaeReef(3).andThen(
-                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.25)) //
                         )
                     )
                 //.andThen(new SetAlgaeTravelPosition())
@@ -154,7 +154,7 @@ public final class Robot extends TimedRobot {
                 new SetAlgaeTravelPosition()
                     .andThen(
                         new IntakeAlgaeReef(4).andThen(
-                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.25)) //
                         )
                     )
                 //.andThen(new SetAlgaeTravelPosition())

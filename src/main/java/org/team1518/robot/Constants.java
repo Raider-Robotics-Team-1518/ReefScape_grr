@@ -101,7 +101,7 @@ public final class Constants {
         public static final double coralEjectAngleLevel4 = -46; // vertical
         // optimal angle in degrees for ejecting algae into the processor
         public static final double targetCoralIntakeAngle = -95;
-        public static final double travelAlgaeAngle = -55;
+        public static final double travelAlgaeAngle = -80;
         public static final double travelCoralIntakeAngle = -57;
         public static final double[] algaeAngles = {
             0,
