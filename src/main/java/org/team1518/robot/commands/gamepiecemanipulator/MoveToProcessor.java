@@ -39,7 +39,7 @@ public class MoveToProcessor extends Command {
     public void execute() {
         //isAlgaeLoaded = Robot.gamePieceManipulator.isAlgaeLoaded();
         if (Robot.gamePieceManipulator.isAlgaeLoaded()) {
-            Robot.gamePieceManipulator.runIntake(-0.1); //
+            Robot.gamePieceManipulator.runIntake(-0.05);
             if (!isAtHeight) {
                 // set height to correct
                 current_height = Robot.elevatorSubsystem.getCurrentHeight();
