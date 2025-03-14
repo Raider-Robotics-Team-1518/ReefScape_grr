@@ -4,6 +4,8 @@
 
 package org.team1518.robot.subsystems;
 
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.Rev2mDistanceSensor;
 import com.revrobotics.Rev2mDistanceSensor.Port;
@@ -26,6 +28,7 @@ public class GamePieceManipulator extends SubsystemBase {
     private SparkMax gamePieceMotor = new SparkMax(Constants.Motors.gamePieceMotorId, MotorType.kBrushless);
     private SparkBaseConfig gamePieceMotorConfig;
     private final Rev2mDistanceSensor distanceSensor;
+    private TalonFX gamePieceMotor2 = new TalonFX(Constants.Motors.gamePieceMotor2Id);
 
     public GamePieceManipulator() {
         gamePieceMotorConfig = new SparkMaxConfig();
@@ -34,6 +37,8 @@ public class GamePieceManipulator extends SubsystemBase {
         gamePieceMotor.configure(gamePieceMotorConfig, null, null);
         distanceSensor = new Rev2mDistanceSensor(Port.kOnboard);
         distanceSensor.setAutomaticMode(true);
+        gamePieceMotor2.setNeutralMode(NeutralModeValue.Brake);
+        gamePieceMotor2.setInverted(false);
     }
 
     public boolean isCoralLoaded() {
@@ -62,14 +67,17 @@ public class GamePieceManipulator extends SubsystemBase {
 
     public void intakeAlgae() {
         gamePieceMotor.set(Constants.MotorSpeeds.algaeIntakeMotorSpeed);
+        gamePieceMotor2.set(Constants.MotorSpeeds.algaeIntakeMotorSpeed);
     }
 
     public void ejectAlgae() {
         gamePieceMotor.set(Constants.MotorSpeeds.algaeEjectMotorSpeed);
+        gamePieceMotor2.set(Constants.MotorSpeeds.algaeIntakeMotorSpeed);
     }
 
     public void runIntake(double speed) {
         gamePieceMotor.set(speed);
+        gamePieceMotor2.set(speed);
     }
 
     public void stopCoralMotor() {
@@ -82,6 +90,7 @@ public class GamePieceManipulator extends SubsystemBase {
 
     public void stopGamePieceMotor() {
         gamePieceMotor.set(0);
+        gamePieceMotor2.set(0);
     }
 
     public boolean isDistanceValid() {

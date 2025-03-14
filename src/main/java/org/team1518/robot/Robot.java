@@ -50,6 +50,7 @@ public final class Robot extends TimedRobot {
     public static GamePieceManipulator gamePieceManipulator;
     public static Blinkies m_blinkies;
     public static LimeLight limeLight;
+    //private Boolean orientation = true;
 
     public final Routines routines;
     public final Autos autos;
@@ -58,6 +59,8 @@ public final class Robot extends TimedRobot {
     private final CommandXboxController coDriver;
     private final CommandGenericHID buttonBox;
     private final JoystickButton swerveTare;
+
+    //private final JoystickButton swerveMode;
 
     public Robot() {
         DriverStation.silenceJoystickConnectionWarning(true);
@@ -89,6 +92,7 @@ public final class Robot extends TimedRobot {
         coDriver = new CommandXboxController(Constants.kCoDriver);
         buttonBox = new CommandGenericHID(Constants.kButtonBox);
         swerveTare = new JoystickButton(driver, 15);
+        //swerveMode = new JoystickButton(driver, 11);
 
         // Set default commands
         swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.9));
@@ -98,6 +102,7 @@ public final class Robot extends TimedRobot {
 
         // Driver bindings
         swerveTare.onTrue(swerve.tareRotation());
+        //swerveMode.toggleOnTrue(switchSwerveMode());
 
         // Co-driver bindings for manual operations
         coDriver.y().whileTrue(new ManualWrist(0.25)); // .onFalse(new ManualWrist(0));
@@ -111,7 +116,7 @@ public final class Robot extends TimedRobot {
 
         // Algae Intake Options
         buttonBox
-            .button(5)
+            .button(11)
             .onTrue(
                 new SetAlgaeTravelPosition()
                     .andThen(
@@ -122,11 +127,22 @@ public final class Robot extends TimedRobot {
                     .andThen(new SetAlgaeTravelPosition())
             );
         buttonBox
-            .button(6)
+            .button(5)
             .onTrue(
                 new SetAlgaeTravelPosition()
                     .andThen(
                         new IntakeAlgaeReef(2).andThen(
+                            Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
+                        )
+                    )
+                    .andThen(new SetAlgaeTravelPosition())
+            );
+        buttonBox
+            .button(6)
+            .onTrue(
+                new SetAlgaeTravelPosition()
+                    .andThen(
+                        new IntakeAlgaeReef(3).andThen(
                             Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
                         )
                     )
@@ -137,7 +153,7 @@ public final class Robot extends TimedRobot {
             .onTrue(
                 new SetAlgaeTravelPosition()
                     .andThen(
-                        new IntakeAlgaeReef(3).andThen(
+                        new IntakeAlgaeReef(4).andThen(
                             Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.5))
                         )
                     )
@@ -163,6 +179,19 @@ public final class Robot extends TimedRobot {
             .button(1)
             .onTrue(new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)).andThen(new MoveToEjectCoralAngle(4)));
     }
+
+    /*private Command switchSwerveMode() {
+        if (this.orientation) {
+            swerve.setDefaultCommand(
+                swerve.driveRobotOriented(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.9)
+            );
+            this.orientation = false;
+        } else {
+            this.orientation = true;
+            swerve.setDefaultCommand(swerve.drive(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.9));
+        }
+        return null;
+    }*/
 
     @Override
     public void teleopInit() {

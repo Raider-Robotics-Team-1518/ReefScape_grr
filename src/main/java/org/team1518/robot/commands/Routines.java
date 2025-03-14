@@ -41,4 +41,11 @@ public final class Routines {
             swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutAndRotate()")
         );
     }
+
+    public Command driveToReef1() {
+        return sequence(
+            print("Drive to Reef 1"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.driveToReef1()")
+        );
+    }
 }

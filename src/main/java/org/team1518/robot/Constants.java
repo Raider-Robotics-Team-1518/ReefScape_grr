@@ -57,6 +57,7 @@ public final class Constants {
         public static final int elevatorMotorId = 26;
         public static final int wristMotorId = 18;
         public static final int gamePieceMotorId = 17;
+        public static final int gamePieceMotor2Id = 16;
     }
 
     public static class Limits {
@@ -89,6 +90,7 @@ public final class Constants {
         public static final double targetCoralIntakeHeight = 4.9;
         public static final double[] algaeLevels = {
             0, // we ignore this level, leave at 0
+            0, // ground level (floor)
             3.1, // level LOW
             9.3, // level 2
             20.6 // level 3
@@ -103,7 +105,8 @@ public final class Constants {
         public static final double travelCoralIntakeAngle = -57;
         public static final double[] algaeAngles = {
             0,
-            -185, // Ground Level Pickup
+            -185, // ground level (floor)
+            -185, // Floor Level Pickup (off coral)
             -135, // Reef Pickup Level 2
             -135 // Reef Pickup Level 3
         };

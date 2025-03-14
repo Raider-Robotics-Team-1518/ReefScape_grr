@@ -151,6 +151,19 @@ public final class Swerve extends GRRSubsystem {
         );
     }
 
+    /*public Command driveRobotOriented(DoubleSupplier x, DoubleSupplier y, DoubleSupplier angular) {
+        return commandBuilder("Swerve.drive()").onExecute(() ->
+            api.applyDriverInput(
+                x.getAsDouble(),
+                y.getAsDouble(),
+                angular.getAsDouble(),
+                Perspective.kRobot,
+                true,
+                true
+            )
+        );
+    }*/
+
     /**
      * Drives the modules to stop the robot from moving.
      * @param lock If the wheels should be driven to an X formation to stop the robot from being pushed.
