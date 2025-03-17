@@ -96,7 +96,7 @@ public final class Constants {
             20.6 // level 3
         };
         // optimal angle in degrees to eject coral onto level 1
-        public static final double coralEjectAngleLevel1 = 0; // nearly horizontal
+        public static final double coralEjectAngleLevel1 = -97;
         public static final double coralEjectAngleLevel23 = -8.5;
         public static final double coralEjectAngleLevel4 = -46; // vertical
         // optimal angle in degrees for ejecting algae into the processor
@@ -137,10 +137,11 @@ public final class Constants {
         public static final double coralManualEjectMotorSpeed = 0.2;
         public static final double coralManualIntakeMotorSpeed = 0.2;
         public static final double slowAlgaeManualIntakeMotorSpeed = -0.2;
-        public static final double algaeEjectMotorSpeed = 0.5;
+        public static final double algaeEjectMotorSpeed = 0.3; // slower for barge and processor ejects
         public static final double algaeIntakeMotorSpeed = -0.5;
         public static final double algaeManualEjectMotorSpeed = 0.5;
         public static final double algaeManualIntakeMotorSpeed = -0.5;
+        public static final double coralAutoEjectMotorSpeed = -0.3;
     }
 
     public static final class Times {

@@ -18,7 +18,7 @@ public class SetIntakeCoralTravelPosition extends Command {
     /** Creates a new SetTravelPosition. */
     public SetIntakeCoralTravelPosition() {
         // Use addRequirements() here to declare subsystem dependencies.
-        addRequirements(Robot.elevatorSubsystem, Robot.wristSubsystem);
+        addRequirements(Robot.wristSubsystem);
     }
 
     // Called when the command is initially scheduled.

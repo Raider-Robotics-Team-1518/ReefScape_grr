@@ -10,7 +10,16 @@ import edu.wpi.first.epilogue.Logged.Strategy;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
+import org.team1518.robot.commands.gamepiecemanipulator.IntakeAlgaeReef;
+import org.team1518.robot.commands.gamepiecemanipulator.ManualAlgaeIntake;
+import org.team1518.robot.commands.gamepiecemanipulator.MoveToEjectCoralAngle;
+import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
+import org.team1518.robot.commands.gamepiecemanipulator.SetAlgaeTravelPosition;
+import org.team1518.robot.commands.gamepiecemanipulator.SetIntakeCoralTravelPosition;
 import org.team1518.robot.subsystems.Swerve;
 
 /**
@@ -64,8 +73,24 @@ public final class Autos {
         AutoRoutine routine = factory.newRoutine("driveOut1");
         AutoTrajectory driveOut1 = routine.trajectory("Drive_Out_Only_1");
 
-        routine.active().onTrue(sequence(driveOut1.resetOdometry(), driveOut1.cmd()));
-        driveOut1.done().onTrue(sequence(routines.driveOutOnly1(), swerve.finishAuto()));
+        routine
+            .active()
+            .onTrue(
+                sequence(
+                    driveOut1.resetOdometry(),
+                    new SetIntakeCoralTravelPosition().andThen(new RaiseLift(1)),
+                    driveOut1.cmd()
+                )
+            );
+        driveOut1
+            .done()
+            .onTrue(sequence(routines.driveOutOnly1(), swerve.finishAuto()))
+            .onTrue(
+                Commands.sequence(
+                    new MoveToEjectCoralAngle(1),
+                    new ManualAlgaeIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeed)
+                )
+            );
 
         return routine.cmd();
     }
@@ -88,5 +113,15 @@ public final class Autos {
         driveToReef1.done().onTrue(sequence(routines.driveToReef1(), swerve.finishAuto()));
 
         return routine.cmd();
+    }
+
+    private SequentialCommandGroup moveToLevel4() {
+        return new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)).andThen(new MoveToEjectCoralAngle(4));
+    }
+
+    private SequentialCommandGroup autoA3() {
+        return new SetAlgaeTravelPosition()
+            .andThen(new IntakeAlgaeReef(3))
+            .andThen(Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.25))); //
     }
 }

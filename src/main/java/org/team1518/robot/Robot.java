@@ -78,14 +78,14 @@ public final class Robot extends TimedRobot {
         /* Lime Light Cameras */
         limeLight = new LimeLight();
 
-        // Initialize compositions
-        routines = new Routines(this);
-        autos = new Autos(this);
-
         elevatorSubsystem = new ElevatorSubsystem();
         wristSubsystem = new WristSubsystem();
         gamePieceManipulator = new GamePieceManipulator();
         CameraServer.startAutomaticCapture(); // enable for USB camera
+
+        // Initialize compositions
+        routines = new Routines(this);
+        autos = new Autos(this);
 
         // Initialize controllers
         driver = new Joystick(Constants.kDriver);
@@ -223,6 +223,7 @@ public final class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         SmartDashboard.putNumber("Distance", limeLight.getDistanceToTarget());
+        SmartDashboard.putNumber("Horizontal Offset", limeLight.getTargetOffsetHorizontal());
     }
 
     @Override
