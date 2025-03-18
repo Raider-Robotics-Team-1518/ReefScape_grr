@@ -21,6 +21,7 @@ import org.team1518.lib.util.GRRDashboard;
 import org.team1518.lib.util.Profiler;
 import org.team1518.lib.util.Tunable;
 import org.team1518.robot.commands.Autos;
+import org.team1518.robot.commands.ManualClimb;
 import org.team1518.robot.commands.Routines;
 import org.team1518.robot.commands.gamepiecemanipulator.IntakeAlgaeReef;
 import org.team1518.robot.commands.gamepiecemanipulator.IntakeCoral;
@@ -35,6 +36,7 @@ import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
 import org.team1518.robot.commands.gamepiecemanipulator.SetAlgaeTravelPosition;
 import org.team1518.robot.commands.gamepiecemanipulator.SetIntakeCoralTravelPosition;
 import org.team1518.robot.subsystems.Blinkies;
+import org.team1518.robot.subsystems.ClimbSubsystem;
 import org.team1518.robot.subsystems.ElevatorSubsystem;
 import org.team1518.robot.subsystems.GamePieceManipulator;
 import org.team1518.robot.subsystems.Swerve;
@@ -48,6 +50,7 @@ public final class Robot extends TimedRobot {
     public static WristSubsystem wristSubsystem;
     public static ElevatorSubsystem elevatorSubsystem;
     public static GamePieceManipulator gamePieceManipulator;
+    public static ClimbSubsystem climbSubsystem;
     public static Blinkies m_blinkies;
     public static LimeLight limeLight;
     //private Boolean orientation = true;
@@ -81,6 +84,7 @@ public final class Robot extends TimedRobot {
         elevatorSubsystem = new ElevatorSubsystem();
         wristSubsystem = new WristSubsystem();
         gamePieceManipulator = new GamePieceManipulator();
+        climbSubsystem = new ClimbSubsystem();
         CameraServer.startAutomaticCapture(); // enable for USB camera
 
         // Initialize compositions
@@ -113,6 +117,10 @@ public final class Robot extends TimedRobot {
         coDriver.leftTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualIntakeMotorSpeed));
         coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed));
         coDriver.rightBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.slowAlgaeManualIntakeMotorSpeed));
+
+        //Clime bindings
+        coDriver.x().whileTrue(new ManualClimb(Constants.MotorSpeeds.climbMotorSpeed)).onFalse(new ManualClimb(0));
+        coDriver.b().whileTrue(new ManualClimb(-Constants.MotorSpeeds.climbMotorSpeed)).onFalse(new ManualClimb(0));
 
         // Algae Intake Options
         buttonBox

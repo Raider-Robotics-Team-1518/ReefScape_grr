@@ -35,6 +35,27 @@ public final class Routines {
         );
     }
 
+    public Command driveOutCoralLevel1() {
+        return sequence(
+            print("Drive Out Coral Level 1"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutCoralLevel1()")
+        );
+    }
+
+    public Command driveOutCoralLevel4() {
+        return sequence(
+            print("Drive Out Coral Level 4"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutCoralLevel4()")
+        );
+    }
+
+    public Command driveOutAlgaeIntakeLevel2() {
+        return sequence(
+            print("Drive Out Algae Intake Level 2"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutAlgaeIntakeLevel2()")
+        );
+    }
+
     public Command driveOutAndRotate() {
         return sequence(
             print("Drive Out and Rotate"),

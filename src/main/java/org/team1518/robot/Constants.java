@@ -58,6 +58,7 @@ public final class Constants {
         public static final int wristMotorId = 18;
         public static final int gamePieceMotorId = 17;
         public static final int gamePieceMotor2Id = 16;
+        public static final int climbMotorId = 19;
     }
 
     public static class Limits {
@@ -141,7 +142,9 @@ public final class Constants {
         public static final double algaeIntakeMotorSpeed = -0.5;
         public static final double algaeManualEjectMotorSpeed = 0.5;
         public static final double algaeManualIntakeMotorSpeed = -0.5;
-        public static final double coralAutoEjectMotorSpeed = -0.3;
+        public static final double coralAutoEjectMotorSpeedL1 = -0.3;
+        public static final double coralAutoEjectMotorSpeedL234 = 0.3;
+        public static final double climbMotorSpeed = 0.5;
     }
 
     public static final class Times {

@@ -11,11 +11,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import org.team1518.robot.Constants;
 import org.team1518.robot.Robot;
 import org.team1518.robot.commands.gamepiecemanipulator.IntakeAlgaeReef;
 import org.team1518.robot.commands.gamepiecemanipulator.ManualAlgaeIntake;
+import org.team1518.robot.commands.gamepiecemanipulator.ManualCoralIntake;
+import org.team1518.robot.commands.gamepiecemanipulator.MoveToBarge;
 import org.team1518.robot.commands.gamepiecemanipulator.MoveToEjectCoralAngle;
 import org.team1518.robot.commands.gamepiecemanipulator.RaiseLift;
 import org.team1518.robot.commands.gamepiecemanipulator.SetAlgaeTravelPosition;
@@ -44,14 +45,19 @@ public final class Autos {
 
         // Add autonomous modes to the dashboard
         autoChooser.addOption("Example", example());
-        autoChooser.addOption("Drive Out 1", driveOutOnly1());
+        autoChooser.addOption("Drive Out Only", driveOutOnly1());
+        autoChooser.addOption("Score Level 1", driveOutCoralLevel1());
+        autoChooser.addOption("Score Level 4", driveOutCoralLevel4());
+        autoChooser.addOption("Algae In Barge", driveOutIntakeAlgaeScoreBarge());
         autoChooser.addOption("Drive Out and Rotate", driveOutAndRotate());
         autoChooser.addOption("Drive to Reef 1", driveToReef1());
         SmartDashboard.putData("Select Auto", autoChooser);
-        /*GRRDashboard.setTrajectoryCache(factory.cache());
-        GRRDashboard.addAuto("Example", "example", example());
-        GRRDashboard.addAuto("Drive Out 1", "Drive_Out_Only_1", driveOutOnly1());*/
-        //SmartDashboard.putData("Select Auto", GRRDashboard);
+        /*
+         * GRRDashboard.setTrajectoryCache(factory.cache());
+         * GRRDashboard.addAuto("Example", "example", example());
+         * GRRDashboard.addAuto("Drive Out 1", "Drive_Out_Only_1", driveOutOnly1());
+         */
+        // SmartDashboard.putData("Select Auto", GRRDashboard);
         // GRRDashboard.addAuto("Drive Out 2", "Drive_Out_Only_2", driveOutOnly2());
     }
 
@@ -70,25 +76,93 @@ public final class Autos {
     }
 
     private Command driveOutOnly1() {
-        AutoRoutine routine = factory.newRoutine("driveOut1");
-        AutoTrajectory driveOut1 = routine.trajectory("Drive_Out_Only_1");
+        AutoRoutine routine = factory.newRoutine("driveOutOnly1");
+        AutoTrajectory driveOutOnly1 = routine.trajectory("Drive_Out_Only_1_(Level_1_Coral)");
+
+        routine.active().onTrue(sequence(driveOutOnly1.resetOdometry(), driveOutOnly1.cmd()));
+
+        driveOutOnly1.done().onTrue(sequence(routines.driveOutOnly1(), swerve.finishAuto()));
+
+        return routine.cmd();
+    }
+
+    private Command driveOutCoralLevel4() {
+        AutoRoutine routine = factory.newRoutine("driveOutCoralLevel4");
+        AutoTrajectory driveOutOnly2 = routine.trajectory("Drive_Out_Only_2_(Level_234_Coral)");
 
         routine
             .active()
             .onTrue(
                 sequence(
-                    driveOut1.resetOdometry(),
-                    new SetIntakeCoralTravelPosition().andThen(new RaiseLift(1)),
-                    driveOut1.cmd()
+                    driveOutOnly2.resetOdometry(),
+                    new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)),
+                    driveOutOnly2.cmd()
                 )
             );
-        driveOut1
+
+        driveOutOnly2
             .done()
-            .onTrue(sequence(routines.driveOutOnly1(), swerve.finishAuto()))
+            .onTrue(sequence(routines.driveOutCoralLevel4(), swerve.finishAuto()))
+            .onTrue(
+                Commands.sequence(
+                    new MoveToEjectCoralAngle(4),
+                    new ManualCoralIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL234)
+                )
+            );
+
+        return routine.cmd();
+    }
+
+    private Command driveOutCoralLevel1() {
+        AutoRoutine routine = factory.newRoutine("driveOutCoralLevel1");
+        AutoTrajectory driveOutOnly1 = routine.trajectory("Drive_Out_Only_1_(Level_1_Coral)");
+
+        routine
+            .active()
+            .onTrue(
+                sequence(
+                    driveOutOnly1.resetOdometry(),
+                    new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)),
+                    driveOutOnly1.cmd()
+                )
+            );
+
+        driveOutOnly1
+            .done()
+            .onTrue(sequence(routines.driveOutCoralLevel1(), swerve.finishAuto()))
             .onTrue(
                 Commands.sequence(
                     new MoveToEjectCoralAngle(1),
-                    new ManualAlgaeIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeed)
+                    new ManualAlgaeIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL1)
+                )
+            );
+
+        return routine.cmd();
+    }
+
+    private Command driveOutIntakeAlgaeScoreBarge() {
+        AutoRoutine routine = factory.newRoutine("driveOutAlgaeIntakeLevel2");
+        AutoTrajectory driveOutOnly3 = routine.trajectory("Drive_Out_Only_3_(Algae)");
+        AutoTrajectory reefToBarge = routine.trajectory("Reef_To_Barge");
+
+        routine
+            .active()
+            .onTrue(
+                sequence(
+                    driveOutOnly3.resetOdometry(),
+                    new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(2)),
+                    driveOutOnly3.cmd()
+                )
+            );
+
+        driveOutOnly3
+            .done()
+            .onTrue(sequence(routines.driveOutAlgaeIntakeLevel2(), swerve.finishAuto()))
+            .onTrue(
+                Commands.sequence(
+                    new SetAlgaeTravelPosition(),
+                    reefToBarge.cmd(),
+                    new SetAlgaeTravelPosition().andThen(new MoveToBarge())
                 )
             );
 
@@ -114,14 +188,17 @@ public final class Autos {
 
         return routine.cmd();
     }
-
-    private SequentialCommandGroup moveToLevel4() {
-        return new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)).andThen(new MoveToEjectCoralAngle(4));
-    }
-
-    private SequentialCommandGroup autoA3() {
-        return new SetAlgaeTravelPosition()
-            .andThen(new IntakeAlgaeReef(3))
-            .andThen(Commands.race(new ManualAlgaeIntake(-.4), Commands.waitSeconds(0.25))); //
-    }
 }
+/*
+ * private SequentialCommandGroup moveToLevel4() {
+ * return new SetIntakeCoralTravelPosition().andThen(new
+ * RaiseLift(4)).andThen(new MoveToEjectCoralAngle(4));
+ * }
+ *
+ * private SequentialCommandGroup autoA3() {
+ * return new SetAlgaeTravelPosition()
+ * .andThen(new IntakeAlgaeReef(3))
+ * .andThen(Commands.race(new ManualAlgaeIntake(-.4),
+ * Commands.waitSeconds(0.25))); //
+ * }
+ */
