@@ -56,17 +56,17 @@ public final class Routines {
         );
     }
 
+    public Command coralLevel4AlgaeInBarge() {
+        return sequence(
+            print("Coral Level 4 Algae In Barge"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.coralLevel4AlgaeInBarge()")
+        );
+    }
+    
     public Command driveOutAndRotate() {
         return sequence(
             print("Drive Out and Rotate"),
             swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutAndRotate()")
-        );
-    }
-
-    public Command driveToReef1() {
-        return sequence(
-            print("Drive to Reef 1"),
-            swerve.stop(true).withTimeout(1.0).withName("Routines.driveToReef1()")
         );
     }
 }

@@ -50,7 +50,7 @@ public final class Autos {
         autoChooser.addOption("Score Level 4", driveOutCoralLevel4());
         autoChooser.addOption("Algae In Barge", driveOutIntakeAlgaeScoreBarge());
         autoChooser.addOption("Drive Out and Rotate", driveOutAndRotate());
-        autoChooser.addOption("Drive to Reef 1", driveToReef1());
+        autoChooser.addOption("Coral Level 4, Algae In Barge", coralLevel4AlgaeInBarge());
         SmartDashboard.putData("Select Auto", autoChooser);
         /*
          * GRRDashboard.setTrajectoryCache(factory.cache());
@@ -122,7 +122,7 @@ public final class Autos {
             .onTrue(
                 sequence(
                     driveOutOnly1.resetOdometry(),
-                    new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)),
+                    new SetIntakeCoralTravelPosition().andThen(new RaiseLift(1)),
                     driveOutOnly1.cmd()
                 )
             );
@@ -150,8 +150,10 @@ public final class Autos {
             .onTrue(
                 sequence(
                     driveOutOnly3.resetOdometry(),
-                    new SetAlgaeTravelPosition().andThen(new IntakeAlgaeReef(2)),
-                    driveOutOnly3.cmd()
+                    new SetAlgaeTravelPosition().andThen(
+                    Commands.parallel(
+                    Commands.race (new IntakeAlgaeReef(3), Commands.waitSeconds(3)),
+                    driveOutOnly3.cmd()))
                 )
             );
 
@@ -161,13 +163,78 @@ public final class Autos {
             .onTrue(
                 Commands.sequence(
                     new SetAlgaeTravelPosition(),
-                    reefToBarge.cmd(),
-                    new SetAlgaeTravelPosition().andThen(new MoveToBarge())
+                    reefToBarge.cmd()
+                )
+            );
+
+        reefToBarge
+            .done()
+            .onTrue(sequence(routines.driveOutAlgaeIntakeLevel2(), swerve.finishAuto()))
+            .onTrue(
+                Commands.sequence(
+                    new MoveToBarge(),
+                    new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed)
                 )
             );
 
         return routine.cmd();
     }
+
+    private Command coralLevel4AlgaeInBarge() {
+        AutoRoutine routine = factory.newRoutine("coralLevel4AlgaeInBarge");
+        AutoTrajectory driveOutOnly2 = routine.trajectory("Drive_Out_Only_2_(Level_234_Coral)");
+        AutoTrajectory reefToBarge = routine.trajectory("Reef_To_Barge");
+        AutoTrajectory reposition = routine.trajectory("Reposition");
+
+        routine
+            .active()
+            .onTrue(
+                sequence(
+                    driveOutOnly2.resetOdometry(),
+                    new SetIntakeCoralTravelPosition().andThen(new RaiseLift(4)),
+                    driveOutOnly2.cmd()
+                )
+            );
+
+        driveOutOnly2
+            .done()
+            .onTrue(sequence(routines.coralLevel4AlgaeInBarge(), swerve.finishAuto()))
+            .onTrue(
+                Commands.sequence(
+                    new MoveToEjectCoralAngle(4),
+                    new ManualCoralIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL234),
+                    Commands.parallel(
+                    reposition.cmd(), new IntakeAlgaeReef(3)) 
+                )
+            );
+
+        reposition
+            .done()
+            .onTrue(sequence(routines.coralLevel4AlgaeInBarge(), swerve.finishAuto()))
+            .onTrue(
+                Commands.sequence(
+                    new SetAlgaeTravelPosition(),
+                    reefToBarge.cmd()
+                )
+            );
+
+        reefToBarge
+            .done()
+            .onTrue(sequence(routines.coralLevel4AlgaeInBarge(), swerve.finishAuto()))
+            .onTrue(
+                Commands.sequence(
+                    new MoveToBarge(),
+                    new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed)
+                )
+            );
+
+        return routine.cmd();
+    }
+
+
+
+
+
 
     private Command driveOutAndRotate() {
         AutoRoutine routine = factory.newRoutine("driveOutAndRotate");
@@ -175,16 +242,6 @@ public final class Autos {
 
         routine.active().onTrue(sequence(driveOutAndRotate.resetOdometry(), driveOutAndRotate.cmd()));
         driveOutAndRotate.done().onTrue(sequence(routines.driveOutAndRotate(), swerve.finishAuto()));
-
-        return routine.cmd();
-    }
-
-    private Command driveToReef1() {
-        AutoRoutine routine = factory.newRoutine("driveToReef1");
-        AutoTrajectory driveToReef1 = routine.trajectory("Drive_To_Reef_(pos1)");
-
-        routine.active().onTrue(sequence(driveToReef1.resetOdometry(), driveToReef1.cmd()));
-        driveToReef1.done().onTrue(sequence(routines.driveToReef1(), swerve.finishAuto()));
 
         return routine.cmd();
     }

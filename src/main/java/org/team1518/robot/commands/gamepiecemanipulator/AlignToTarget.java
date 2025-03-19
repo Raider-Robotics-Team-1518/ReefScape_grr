@@ -10,19 +10,24 @@ import org.team1518.robot.LimeLight;
 import org.team1518.robot.subsystems.Swerve;
 
 /* You should consider using the more terse Command factories API instead https://ocs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class RotateToTarget extends Command {
+public class AlignToTarget extends Command {
 
     private final Swerve swerveDrive;
-    private final PIDController pidController;
+    private final PIDController turnController;
     private final LimeLight limelight;
 
+    private static final double kP = 0.02;
+    private static final double kI = 0.0;
+    private static final double kD = 0.001;
+    private static final double TOLERANCE = 1.0;
+
     /** Creates a new SetTravelPosition. */
-    public RotateToTarget(Swerve swerveDrive, LimeLight limelight) {
+    public AlignToTarget(Swerve swerveDrive, LimeLight limelight) {
         this.swerveDrive = swerveDrive;
         this.limelight = limelight;
+        this.turnController = new PIDController(kP, kI, kD);
+        turnController.setTolerance(TOLERANCE);
 
-        pidController = new PIDController(0.02, 0, 0.001);
-        pidController.setTolerance(1.0);
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(swerveDrive);
     }
@@ -30,26 +35,27 @@ public class RotateToTarget extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        pidController.setSetpoint(0);
+        turnController.setSetpoint(0);
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         double tx = limelight.getTargetOffsetHorizontal();
-        double rotationSpeed = pidController.calculate(tx, 0);
-        // swerveDrive.drive(0, 0, rotationSpeed);
+        double turnSpeed = turnController.calculate(tx, 0);
+        
+        swerveDrive.drive(() -> 0, () -> 0, () -> turnSpeed).schedule();
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        // swerveDrive.drive(0, 0, 0);
+        swerveDrive.drive(() -> 0, () -> 0, () -> 0).schedule();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return pidController.atSetpoint();
+        return turnController.atSetpoint();
     }
 }
