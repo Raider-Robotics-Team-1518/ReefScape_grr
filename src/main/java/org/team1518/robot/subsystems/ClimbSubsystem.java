@@ -4,11 +4,13 @@
 
 package org.team1518.robot.subsystems;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.team1518.robot.Constants;
 
@@ -16,6 +18,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private SparkMax climbMotor = new SparkMax(Constants.Motors.climbMotorId, MotorType.kBrushless);
     private SparkBaseConfig climbConfig;
+    private RelativeEncoder encoder;
 
     //private double elevatorPosition = 0;
     //private Encoder elevatorEncoder = new Encoder(0, 1);
@@ -26,6 +29,7 @@ public class ClimbSubsystem extends SubsystemBase {
         climbConfig.idleMode(IdleMode.kBrake);
         //climbConfig.inverted(true);
         climbMotor.configure(climbConfig, null, null);
+        this.encoder = climbMotor.getEncoder();
     }
 
     public void runClimbMotor(double speed) {
@@ -36,8 +40,13 @@ public class ClimbSubsystem extends SubsystemBase {
         climbMotor.set(0);
     }
 
+    public double getClimbEncoderCount() {
+        return this.encoder.getPosition();
+    }
+
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        SmartDashboard.putNumber("Encoder Position", getClimbEncoderCount());
     }
 }

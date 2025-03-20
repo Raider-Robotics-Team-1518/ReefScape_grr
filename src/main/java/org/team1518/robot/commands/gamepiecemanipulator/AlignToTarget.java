@@ -43,7 +43,7 @@ public class AlignToTarget extends Command {
     public void execute() {
         double tx = limelight.getTargetOffsetHorizontal();
         double turnSpeed = turnController.calculate(tx, 0);
-        
+
         swerveDrive.drive(() -> 0, () -> 0, () -> turnSpeed).schedule();
     }
 

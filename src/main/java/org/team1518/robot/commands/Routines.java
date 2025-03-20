@@ -62,7 +62,7 @@ public final class Routines {
             swerve.stop(true).withTimeout(1.0).withName("Routines.coralLevel4AlgaeInBarge()")
         );
     }
-    
+
     public Command driveOutAndRotate() {
         return sequence(
             print("Drive Out and Rotate"),

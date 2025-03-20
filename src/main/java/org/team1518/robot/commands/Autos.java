@@ -150,22 +150,20 @@ public final class Autos {
             .onTrue(
                 sequence(
                     driveOutOnly3.resetOdometry(),
-                    new SetAlgaeTravelPosition().andThen(
-                    Commands.parallel(
-                    Commands.race (new IntakeAlgaeReef(3), Commands.waitSeconds(3)),
-                    driveOutOnly3.cmd()))
+                    new SetAlgaeTravelPosition()
+                        .andThen(
+                            Commands.parallel(
+                                Commands.race(new IntakeAlgaeReef(3), Commands.waitSeconds(3)),
+                                driveOutOnly3.cmd()
+                            )
+                        )
                 )
             );
 
         driveOutOnly3
             .done()
             .onTrue(sequence(routines.driveOutAlgaeIntakeLevel2(), swerve.finishAuto()))
-            .onTrue(
-                Commands.sequence(
-                    new SetAlgaeTravelPosition(),
-                    reefToBarge.cmd()
-                )
-            );
+            .onTrue(Commands.sequence(new SetAlgaeTravelPosition(), reefToBarge.cmd()));
 
         reefToBarge
             .done()
@@ -203,20 +201,14 @@ public final class Autos {
                 Commands.sequence(
                     new MoveToEjectCoralAngle(4),
                     new ManualCoralIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL234),
-                    Commands.parallel(
-                    reposition.cmd(), new IntakeAlgaeReef(3)) 
+                    Commands.parallel(reposition.cmd(), new IntakeAlgaeReef(3))
                 )
             );
 
         reposition
             .done()
             .onTrue(sequence(routines.coralLevel4AlgaeInBarge(), swerve.finishAuto()))
-            .onTrue(
-                Commands.sequence(
-                    new SetAlgaeTravelPosition(),
-                    reefToBarge.cmd()
-                )
-            );
+            .onTrue(Commands.sequence(new SetAlgaeTravelPosition(), reefToBarge.cmd()));
 
         reefToBarge
             .done()
@@ -230,11 +222,6 @@ public final class Autos {
 
         return routine.cmd();
     }
-
-
-
-
-
 
     private Command driveOutAndRotate() {
         AutoRoutine routine = factory.newRoutine("driveOutAndRotate");

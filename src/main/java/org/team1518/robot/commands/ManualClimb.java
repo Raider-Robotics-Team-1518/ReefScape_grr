@@ -27,7 +27,7 @@ public class ManualClimb extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (Math.abs(speed) != 0) {
+        if (Math.abs(speed) != 0 && Robot.climbSubsystem.getClimbEncoderCount() < 270) {
             Robot.climbSubsystem.runClimbMotor(speed);
         } else {
             Robot.climbSubsystem.stopClimbMotor();
