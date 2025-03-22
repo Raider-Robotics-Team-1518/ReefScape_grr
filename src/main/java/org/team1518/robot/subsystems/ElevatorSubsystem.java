@@ -4,6 +4,8 @@
 
 package org.team1518.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.Encoder;
@@ -21,6 +23,17 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem() {
         elevatorMotor = new TalonFX(Constants.Motors.elevatorMotorId);
         elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
+
+        var slot0Configs = new Slot0Configs();
+        slot0Configs.kP = 0.2;
+        slot0Configs.kI = 0.0;
+        slot0Configs.kD = 0.01;
+        elevatorMotor.getConfigurator().apply(slot0Configs);
+    }
+
+    public void holdElevator(double encoderCounts) {
+        PositionVoltage positionControl = new PositionVoltage(0).withSlot(0);
+        elevatorMotor.setControl(positionControl.withPosition(encoderCounts));
     }
 
     public void driveElevator(double speed) {

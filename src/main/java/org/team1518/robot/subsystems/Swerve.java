@@ -24,6 +24,7 @@ import org.team1518.lib.util.Tunable;
 import org.team1518.lib.util.command.GRRSubsystem;
 import org.team1518.robot.Constants;
 import org.team1518.robot.Constants.RobotMap;
+import org.team1518.robot.commands.ReefDrive;
 
 /**
  * The robot's swerve drivetrain.
@@ -134,8 +135,9 @@ public final class Swerve extends GRRSubsystem {
 
     /**
      * Drives the robot using driver input.
-     * @param x The X value from the driver's joystick.
-     * @param y The Y value from the driver's joystick.
+     *
+     * @param x       The X value from the driver's joystick.
+     * @param y       The Y value from the driver's joystick.
      * @param angular The CCW+ angular speed to apply, from {@code [-1.0, 1.0]}.
      */
     public Command drive(DoubleSupplier x, DoubleSupplier y, DoubleSupplier angular) {
@@ -151,22 +153,31 @@ public final class Swerve extends GRRSubsystem {
         );
     }
 
-    /*public Command driveRobotOriented(DoubleSupplier x, DoubleSupplier y, DoubleSupplier angular) {
-        return commandBuilder("Swerve.drive()").onExecute(() ->
-            api.applyDriverInput(
-                x.getAsDouble(),
-                y.getAsDouble(),
-                angular.getAsDouble(),
-                Perspective.kRobot,
-                true,
-                true
-            )
-        );
-    }*/
+    public Command driveToReef(DoubleSupplier x, DoubleSupplier y, DoubleSupplier angular) {
+        return new ReefDrive(x, y, angular, this, api);
+    }
+
+    /*
+     * public Command driveRobotOriented(DoubleSupplier x, DoubleSupplier y,
+     * DoubleSupplier angular) {
+     * return commandBuilder("Swerve.drive()").onExecute(() ->
+     * api.applyDriverInput(
+     * x.getAsDouble(),
+     * y.getAsDouble(),
+     * angular.getAsDouble(),
+     * Perspective.kRobot,
+     * true,
+     * true
+     * )
+     * );
+     * }
+     */
 
     /**
      * Drives the modules to stop the robot from moving.
-     * @param lock If the wheels should be driven to an X formation to stop the robot from being pushed.
+     *
+     * @param lock If the wheels should be driven to an X formation to stop the
+     *             robot from being pushed.
      */
     public Command stop(boolean lock) {
         return commandBuilder("Swerve.stop(" + lock + ")").onExecute(() -> api.applyStop(lock));
@@ -186,8 +197,10 @@ public final class Swerve extends GRRSubsystem {
     }
 
     /**
-     * Resets the pose of the robot, inherently seeding field-relative movement. This
+     * Resets the pose of the robot, inherently seeding field-relative movement.
+     * This
      * method is not intended for use outside of creating an {@link AutoFactory}.
+     *
      * @param pose The new blue origin relative pose to apply to the pose estimator.
      */
     public void resetPose(Pose2d pose) {
@@ -197,6 +210,7 @@ public final class Swerve extends GRRSubsystem {
     /**
      * Follows a Choreo trajectory by moving towards the next sample. This method
      * is not intended for use outside of creating an {@link AutoFactory}.
+     *
      * @param sample The next trajectory sample.
      */
     public void followTrajectory(SwerveSample sample) {

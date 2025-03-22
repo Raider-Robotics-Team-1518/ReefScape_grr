@@ -62,6 +62,7 @@ public final class Robot extends TimedRobot {
     private final CommandXboxController coDriver;
     private final CommandGenericHID buttonBox;
     private final JoystickButton swerveTare;
+    private final JoystickButton trigger;
 
     //private final JoystickButton swerveMode;
 
@@ -96,6 +97,7 @@ public final class Robot extends TimedRobot {
         coDriver = new CommandXboxController(Constants.kCoDriver);
         buttonBox = new CommandGenericHID(Constants.kButtonBox);
         swerveTare = new JoystickButton(driver, 15);
+        trigger = new JoystickButton(driver, 1);
         //swerveMode = new JoystickButton(driver, 11);
 
         // Set default commands
@@ -106,6 +108,7 @@ public final class Robot extends TimedRobot {
 
         // Driver bindings
         swerveTare.onTrue(swerve.tareRotation());
+        trigger.whileTrue(swerve.driveToReef(driver::getX, driver::getY, () -> Math.pow(driver.getZ(), 3) * 0.9));
         //swerveMode.toggleOnTrue(switchSwerveMode());
 
         // Co-driver bindings for manual operations

@@ -30,6 +30,7 @@ public class RaiseLift extends Command {
     @Override
     public void initialize() {
         targetHeight = Constants.Reef.coralLevels[this.level];
+        Robot.elevatorSubsystem.holdElevator(targetHeight);
         isDone = false;
         // y
     }
@@ -37,14 +38,14 @@ public class RaiseLift extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        currentHeight = Robot.elevatorSubsystem.getCurrentHeight();
-        if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefCoralHeightTolerance) {
-            double v_sign = Math.signum(targetHeight - currentHeight);
-            Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
-        } else {
-            Robot.elevatorSubsystem.stopElevator();
-            isDone = true;
-        }
+        // currentHeight = Robot.elevatorSubsystem.getCurrentHeight();
+        // if (Math.abs(targetHeight - currentHeight) > Constants.Tolerances.reefCoralHeightTolerance) {
+        //     double v_sign = Math.signum(targetHeight - currentHeight);
+        //     Robot.elevatorSubsystem.driveElevator(v_sign * (Constants.MotorSpeeds.elevatorPower));
+        // } else {
+        //     Robot.elevatorSubsystem.stopElevator();
+        //     isDone = true;
+        // }
     }
 
     // Called once the command ends or is interrupted.
@@ -56,6 +57,9 @@ public class RaiseLift extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
+        isDone =
+            Math.abs(targetHeight - Robot.elevatorSubsystem.getCurrentHeight()) <
+            Constants.Tolerances.reefCoralHeightTolerance;
         return isDone;
     }
 }
