@@ -235,6 +235,7 @@ public final class Robot extends TimedRobot {
     public void teleopPeriodic() {
         SmartDashboard.putNumber("Distance", limeLight.getDistanceToTarget());
         SmartDashboard.putNumber("Horizontal Offset", limeLight.getTargetOffsetHorizontal());
+        // SmartDashboard.putNumber("Rotation", kDefaultPeriod)
     }
 
     @Override

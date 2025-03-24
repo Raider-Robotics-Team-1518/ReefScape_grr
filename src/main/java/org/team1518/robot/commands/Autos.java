@@ -47,18 +47,12 @@ public final class Autos {
         autoChooser.addOption("Example", example());
         autoChooser.addOption("Drive Out Only", driveOutOnly1());
         autoChooser.addOption("Score Level 1", driveOutCoralLevel1());
+        autoChooser.addOption("Drive out Algae 2", driveOutIntakeAlgae());
         autoChooser.addOption("Score Level 4", driveOutCoralLevel4());
         autoChooser.addOption("Algae In Barge", driveOutIntakeAlgaeScoreBarge());
         autoChooser.addOption("Drive Out and Rotate", driveOutAndRotate());
         autoChooser.addOption("Coral Level 4, Algae In Barge", coralLevel4AlgaeInBarge());
         SmartDashboard.putData("Select Auto", autoChooser);
-        /*
-         * GRRDashboard.setTrajectoryCache(factory.cache());
-         * GRRDashboard.addAuto("Example", "example", example());
-         * GRRDashboard.addAuto("Drive Out 1", "Drive_Out_Only_1", driveOutOnly1());
-         */
-        // SmartDashboard.putData("Select Auto", GRRDashboard);
-        // GRRDashboard.addAuto("Drive Out 2", "Drive_Out_Only_2", driveOutOnly2());
     }
 
     public Command getAuto() {
@@ -136,6 +130,31 @@ public final class Autos {
                     new ManualAlgaeIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL1)
                 )
             );
+
+        return routine.cmd();
+    }
+
+    private Command driveOutIntakeAlgae() {
+        AutoRoutine routine = factory.newRoutine("driveOutAlgaeIntakeLevel2");
+        AutoTrajectory driveOutOnly3 = routine.trajectory("Drive_Out_Only_3_(Algae)");
+
+        routine
+            .active()
+            .onTrue(
+                sequence(
+                    driveOutOnly3.resetOdometry(),
+                    new SetAlgaeTravelPosition()
+                        .andThen(
+                            Commands.parallel(
+                                // ground is level 1, so 3 is level 2 on the reef
+                                Commands.race(new IntakeAlgaeReef(3), Commands.waitSeconds(5)),
+                                driveOutOnly3.cmd()
+                            )
+                        )
+                )
+            );
+
+        driveOutOnly3.done().onTrue(sequence(routines.driveOutAlgaeIntakeLevel2(), swerve.finishAuto()));
 
         return routine.cmd();
     }
