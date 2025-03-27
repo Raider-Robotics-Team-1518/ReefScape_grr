@@ -44,14 +44,15 @@ public class IntakeAlgaeReef extends Command {
     @Override
     public void execute() {
         if (isAtAngle && isAtHeight && Robot.gamePieceManipulator.isAlgaeLoaded()) {
-            isDone = true;
+            Robot.gamePieceManipulator.runIntake(-0.2);
+            // isDone = true;
         } else {
             if (!isAlgaeLoaded) {
                 // set arm to correct angle
                 targetAngle = Constants.Reef.algaeAngles[this.level];
                 current_angle = Robot.wristSubsystem.getWristPosition();
                 // Calculate power curve proportional
-                double armRotationPower = Math.abs(this.targetAngle - current_angle) / 200 + 0.2;
+                double armRotationPower = Math.abs(this.targetAngle - current_angle) / 200 + 0.1;
                 // Move arm up or down to target arm angle
                 if (Math.abs(this.targetAngle - current_angle) > Constants.Tolerances.algaeIntakeAngleTolerance) {
                     double v_sign = Math.signum(this.targetAngle - current_angle);
@@ -74,11 +75,11 @@ public class IntakeAlgaeReef extends Command {
                 if (!Robot.gamePieceManipulator.isAlgaeLoaded()) {
                     Robot.gamePieceManipulator.intakeAlgae();
                 } else {
-                    Robot.gamePieceManipulator.stopGamePieceMotor();
+                    // Robot.gamePieceManipulator.stopGamePieceMotor();
                     isAlgaeLoaded = true;
                 }
             } else {
-                isDone = true;
+                // isDone = true;
             }
         }
     }
