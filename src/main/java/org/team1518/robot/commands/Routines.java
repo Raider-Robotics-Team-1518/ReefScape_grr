@@ -69,4 +69,22 @@ public final class Routines {
             swerve.stop(true).withTimeout(1.0).withName("Routines.driveOutAndRotate()")
         );
     }
+
+    public Command repositionP1() {
+        return sequence(
+            print("Reposition Part 1"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.repositionP1()")
+        );
+    }
+
+    public Command repositionP2() {
+        return sequence(
+            print("Reposition Part 2"),
+            swerve.stop(true).withTimeout(1.0).withName("Routines.repositionP2()")
+        );
+    }
+
+    public Command reefToBarge() {
+        return sequence(print("Reef To Barge"), swerve.stop(true).withTimeout(1.0).withName("Routines.reefToBarge()"));
+    }
 }
