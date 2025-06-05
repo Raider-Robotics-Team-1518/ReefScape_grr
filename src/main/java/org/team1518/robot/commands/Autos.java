@@ -52,7 +52,7 @@ public final class Autos {
         autoChooser.addOption("Algae In Barge", driveOutIntakeAlgaeScoreBarge());
         autoChooser.addOption("Drive Out and Rotate", driveOutAndRotate());
         autoChooser.addOption("Coral Level 4, Algae In Barge", coralLevel4AlgaeInBarge());
-        autoChooser.addOption("Drive Out and Rotate", scoreCoralAndAlgae());
+        autoChooser.addOption("Score Coral and Algae", scoreCoralAndAlgae());
         SmartDashboard.putData("Select Auto", autoChooser);
     }
 
@@ -202,7 +202,7 @@ public final class Autos {
         AutoRoutine routine = factory.newRoutine("coralLevel4AlgaeInBarge");
         AutoTrajectory driveOutOnly2 = routine.trajectory("Drive_Out_Only_2_(Level_234_Coral)");
         AutoTrajectory reefToBarge = routine.trajectory("Reef_To_Barge");
-        AutoTrajectory reposition = routine.trajectory("Reposition");
+        AutoTrajectory repositionP1 = routine.trajectory("RepositionP1");
 
         routine
             .active()
@@ -221,11 +221,11 @@ public final class Autos {
                 Commands.sequence(
                     new MoveToEjectCoralAngle(4),
                     new ManualCoralIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL234),
-                    Commands.parallel(reposition.cmd(), new IntakeAlgaeReef(3))
+                    Commands.parallel(repositionP1.cmd(), new IntakeAlgaeReef(3))
                 )
             );
 
-        reposition
+        repositionP1
             .done()
             .onTrue(sequence(routines.coralLevel4AlgaeInBarge(), swerve.finishAuto()))
             .onTrue(Commands.sequence(new SetAlgaeTravelPosition(), reefToBarge.cmd()));
