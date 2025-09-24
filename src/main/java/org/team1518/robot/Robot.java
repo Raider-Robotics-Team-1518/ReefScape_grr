@@ -118,8 +118,8 @@ public final class Robot extends TimedRobot {
         coDriver.povDown().whileTrue(new ManualLift(Constants.MotorSpeeds.elevatorPowerDn));
         coDriver.rightTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualEjectMotorSpeed));
         coDriver.leftTrigger().whileTrue(new ManualAlgaeIntake(Constants.MotorSpeeds.algaeManualIntakeMotorSpeed));
-        coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed));
-        coDriver.rightBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.slowAlgaeManualIntakeMotorSpeed));
+        coDriver.rightBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.coralManualIntakeMotorSpeed));
+        coDriver.leftBumper().whileTrue(new ManualCoralIntake(Constants.MotorSpeeds.slowAlgaeManualIntakeMotorSpeed));
 
         //Clime bindings
         coDriver.x().whileTrue(new ManualClimb(Constants.MotorSpeeds.climbMotorSpeed)).onFalse(new ManualClimb(0));

@@ -220,7 +220,7 @@ public final class Autos {
             .onTrue(
                 Commands.sequence(
                     new MoveToEjectCoralAngle(4),
-                    new ManualCoralIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL234),
+                    new ManualCoralIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL234).withTimeout(2),
                     Commands.parallel(repositionP1.cmd(), new IntakeAlgaeReef(3))
                 )
             );
@@ -276,7 +276,7 @@ public final class Autos {
             .onTrue(
                 Commands.sequence(
                     new MoveToEjectCoralAngle(1),
-                    new ManualAlgaeIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL1)
+                    new ManualAlgaeIntake(Constants.MotorSpeeds.coralAutoEjectMotorSpeedL1).withTimeout(2)
                 )
             );
 
